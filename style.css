@@ -1,0 +1,162 @@
+:root {
+    --primary-color: #6366f1;
+    --secondary-color: #4f46e5;
+    --background: #f8fafc;
+    --text-color: #1e293b;
+}
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: 'Segoe UI', system-ui, sans-serif;
+}
+
+body {
+    background: var(--background);
+    color: var(--text-color);
+    line-height: 1.6;
+}
+
+.container {
+    max-width: 1400px;
+    margin: 0 auto;
+    padding: 0 20px;
+}
+
+/* 头部样式 */
+.main-header {
+    background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+    color: white;
+    padding: 4rem 0;
+    margin-bottom: 2rem;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+.logo {
+    font-size: 2.8rem;
+    margin-bottom: 0.5rem;
+}
+
+.subtitle {
+    font-size: 1.2rem;
+    opacity: 0.9;
+}
+
+/* 网格布局 */
+.layout-grid {
+    display: grid;
+    grid-template-columns: 280px 1fr;
+    gap: 2rem;
+    margin: 2rem 0;
+}
+
+/* 系列列表 */
+.series-list {
+    background: white;
+    padding: 1rem;
+    border-radius: 12px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+}
+
+.series-item {
+    padding: 1rem;
+    margin: 0.5rem 0;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: background 0.2s;
+}
+
+.series-item:hover {
+    background: #f1f5f9;
+}
+
+.series-item.active {
+    background: var(--primary-color);
+    color: white;
+}
+
+/* 播放器容器 */
+.player-container {
+    background: white;
+    border-radius: 12px;
+    overflow: hidden;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+    margin-bottom: 1.5rem;
+}
+
+/* 分集控制 */
+.episode-controls {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin: 1.5rem 0;
+}
+
+.btn {
+    background: var(--primary-color);
+    color: white;
+    padding: 0.8rem 1.5rem;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+    transition: transform 0.2s, background 0.2s;
+}
+
+.btn:hover {
+    background: var(--secondary-color);
+    transform: translateY(-1px);
+}
+
+.episode-counter {
+    font-weight: 500;
+    color: #64748b;
+}
+
+/* 分集列表 */
+.episode-list {
+    display: grid;
+    gap: 1rem;
+}
+
+.episode-card {
+    background: white;
+    padding: 1rem;
+    border-radius: 8px;
+    display: flex;
+    gap: 1rem;
+    align-items: center;
+    cursor: pointer;
+    transition: transform 0.2s;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+}
+
+.episode-card:hover {
+    transform: translateY(-2px);
+}
+
+.thumbnail {
+    width: 160px;
+    height: 90px;
+    border-radius: 6px;
+    object-fit: cover;
+}
+
+/* 页脚 */
+.main-footer {
+    border-top: 1px solid #e2e8f0;
+    padding: 2rem 0;
+    margin-top: 3rem;
+    text-align: center;
+    color: #64748b;
+}
+
+@media (max-width: 768px) {
+    .layout-grid {
+        grid-template-columns: 1fr;
+    }
+    
+    .series-list {
+        order: 2;
+    }
+}
