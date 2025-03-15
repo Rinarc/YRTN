@@ -1,0 +1,38 @@
+[
+    {
+        "title": "VOG BADMINTON PERFORMANCE",
+        "description": "Episode 1",
+        "episodes": [
+            {
+                "title": "第一集",
+                "url": "https://sc2.huang1111.cn/api/v3/slave/download/0/bmV3Mi9iYXNpYy8xMDcxNjEvMjAyNS8wMzA5LzEwMzQvUlBSZXBsYXlfRmluYWwxNzM2NTE0MDYxLm1vdg/RPReplay_Final1736514061.mov?sign=z3fTlo_DLx6ctdwHS9IJWvDSpOJxKgWDxEcFupoaRGE%3D%3A1741488666",
+                "thumbnail": "assets/thumbnails/web-dev/ep1.jpg",
+                "duration": "15:30"
+            },
+            {
+                "title": "CSS布局实战",
+                "url": "assets/videos/web-dev/ep2.mp4",
+                "thumbnail": "assets/thumbnails/web-dev/ep2.jpg",
+                "duration": "20:45"
+            },
+            {
+                "title": "JavaScript核心概念",
+                "url": "assets/videos/web-dev/ep3.mp4",
+                "thumbnail": "assets/thumbnails/web-dev/ep3.jpg",
+                "duration": "25:20"
+            }
+        ]
+    },
+    {
+        "title": "Python实战项目",
+        "description": "通过实际项目掌握Python编程",
+        "episodes": [
+            {
+                "title": "环境搭建与基础语法",
+                "url": "assets/videos/python/ep1.mp4",
+                "thumbnail": "assets/thumbnails/python/ep1.jpg",
+                "duration": "18:00"
+            }
+        ]
+    }
+]
