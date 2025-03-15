@@ -7,7 +7,7 @@ let currentEpisode = 0;
 
 // 加载视频数据
 async function loadData() {
-    const response = await fetch('data/videos.json');
+    const response = await fetch('YRTN/videos.json');
     return await response.json();
 }
 
