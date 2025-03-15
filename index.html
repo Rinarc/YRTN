@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="YRTN">
+    <title>YRTN | Home</title>
+    <link rel="stylesheet" href="https://cdn.plyr.io/3.7.8/plyr.css">
+    <link rel="stylesheet" href="styles/main.css">
+    <!-- GitHub Pages预览信息 -->
+    <meta property="og:title" content="YRTN">
+    <meta property="og:description" content="Yuanyu Reality TV Network">
+    <meta property="og:image" content="assets/thumbnails/cover.jpg">
+</head>
+<body>
+    <header class="main-header">
+        <div class="container">
+            <h1 class="logo">YRTN</h1>
+            <p class="subtitle">Yuanyu Reality TV Network</p>
+        </div>
+    </header>
+
+    <main class="container layout-grid">
+        <!-- 系列侧边栏 -->
+        <aside class="series-list" id="seriesList"></aside>
+
+        <!-- 主内容区 -->
+        <section class="main-content">
+            <div class="player-container">
+                <video id="player" playsinline controls></video>
+            </div>
+            
+            <!-- 分集控制 -->
+            <div class="episode-controls">
+                <button class="btn prev" onclick="changeEpisode(-1)">← 上一集</button>
+                <span class="episode-counter" id="episodeCounter"></span>
+                <button class="btn next" onclick="changeEpisode(1)">下一集 →</button>
+            </div>
+
+            <!-- 当前系列信息 -->
+            <div class="series-info" id="seriesInfo"></div>
+
+            <!-- 分集列表 -->
+            <div class="episode-list" id="episodeList"></div>
+        </section>
+    </main>
+
+    <footer class="main-footer">
+        <div class="container">
+            <p>© 2025 YRTN · 基于 <a href="https://pages.github.com/" target="_blank">GitHub Pages</a></p>
+        </div>
+    </footer>
+
+    <!-- 脚本 -->
+    <script src="https://cdn.plyr.io/3.7.8/plyr.js"></script>
+    <script src="scripts/main.js"></script>
+</body>
+</html>
