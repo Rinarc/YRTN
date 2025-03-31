@@ -1,0 +1,238 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>小说阅读器 - YRTN</title>
+    <style>
+        /* 基础样式 */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', system-ui, sans-serif;
+        }
+
+        body {
+            background: #f5f5f5;
+            color: #333;
+            line-height: 1.6;
+        }
+
+        /* 导航栏 */
+        .novel-nav {
+            background: #2c3e50;
+            padding: 1rem;
+            color: white;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .nav-links a {
+            color: white;
+            text-decoration: none;
+            margin-left: 1.5rem;
+        }
+
+        /* 主体容器 */
+        .container {
+            max-width: 800px;
+            margin: 2rem auto;
+            padding: 0 1rem;
+        }
+
+        /* 小说选择区 */
+        .book-selector {
+            background: white;
+            border-radius: 8px;
+            padding: 1.5rem;
+            margin-bottom: 2rem;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+
+        select {
+            width: 100%;
+            padding: 0.8rem;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            margin-bottom: 1rem;
+        }
+
+        /* 阅读区域 */
+        .reader-container {
+            background: white;
+            border-radius: 8px;
+            padding: 2rem;
+            min-height: 500px;
+            position: relative;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+
+        .chapter-title {
+            font-size: 1.5rem;
+            margin-bottom: 1rem;
+            color: #2c3e50;
+        }
+
+        .content {
+            font-size: 1.1rem;
+            line-height: 1.8;
+            margin-bottom: 2rem;
+        }
+
+        /* 控制按钮 */
+        .controls {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 2rem;
+        }
+
+        .btn {
+            background: #3498db;
+            color: white;
+            padding: 0.8rem 1.5rem;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            transition: background 0.3s;
+        }
+
+        .btn:hover {
+            background: #2980b9;
+        }
+
+        /* 进度指示 */
+        .progress {
+            text-align: center;
+            color: #7f8c8d;
+            margin: 1rem 0;
+        }
+
+        /* 移动端适配 */
+        @media (max-width: 768px) {
+            .container {
+                padding: 0 0.5rem;
+            }
+            
+            .reader-container {
+                padding: 1rem;
+                min-height: 70vh;
+            }
+        }
+    </style>
+</head>
+<body>
+    <nav class="novel-nav">
+        <h1>YRTN小说阅读器</h1>
+        <div class="nav-links">
+            <a href="index.html">返回首页</a>
+            <a href="#bookmark">书签</a>
+        </div>
+    </nav>
+
+    <div class="container">
+        <!-- 小说选择 -->
+        <div class="book-selector">
+            <select id="bookSelect">
+                <option value="">请选择小说</option>
+                <option value="book1">平凡的世界</option>
+                <option value="book2">三体</option>
+                <option value="book3">活着</option>
+            </select>
+        </div>
+
+        <!-- 阅读器 -->
+        <div class="reader-container" id="reader">
+            <div class="chapter-title" id="chapterTitle">第一章 开始</div>
+            <div class="progress" id="progress">第1章/共10章</div>
+            <div class="content" id="content">
+                这里是小说内容文本...
+            </div>
+            <div class="controls">
+                <button class="btn" onclick="prevChapter()">上一章</button>
+                <button class="btn" onclick="nextChapter()">下一章</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // 小说数据示例
+        const books = {
+            book1: {
+                title: "平凡的世界",
+                chapters: [
+                    { title: "第一章 黄土高原", content: "1975年二三月间..." },
+                    { title: "第二章 县城中学", content: "孙少平拿着黑面馍..." }
+                ]
+            },
+            book2: {
+                title: "三体",
+                chapters: [
+                    { title: "第一章 科学边界", content: "汪淼觉得..." },
+                    { title: "第二章 台球游戏", content: "常伟思将军的办公室..." }
+                ]
+            }
+        };
+
+        let currentBook = null;
+        let currentChapter = 0;
+
+        // 初始化选择器
+        document.getElementById('bookSelect').addEventListener('change', function(e) {
+            const bookId = e.target.value;
+            if (bookId) {
+                currentBook = books[bookId];
+                currentChapter = 0;
+                loadChapter();
+                localStorage.setItem('lastBook', bookId); // 保存阅读进度
+            }
+        });
+
+        // 加载章节
+        function loadChapter() {
+            const chapter = currentBook.chapters[currentChapter];
+            document.getElementById('chapterTitle').textContent = chapter.title;
+            document.getElementById('content').textContent = chapter.content;
+            updateProgress();
+        }
+
+        // 更新进度
+        function updateProgress() {
+            document.getElementById('progress').textContent = 
+                `第${currentChapter + 1}章/共${currentBook.chapters.length}章`;
+        }
+
+        // 章节导航
+        function prevChapter() {
+            if (currentChapter > 0) {
+                currentChapter--;
+                loadChapter();
+            }
+        }
+
+        function nextChapter() {
+            if (currentChapter < currentBook.chapters.length - 1) {
+                currentChapter++;
+                loadChapter();
+            }
+        }
+
+        // 初始化上次阅读
+        const lastBook = localStorage.getItem('lastBook');
+        if (lastBook && books[lastBook]) {
+            document.getElementById('bookSelect').value = lastBook;
+            currentBook = books[lastBook];
+            currentChapter = parseInt(localStorage.getItem('lastChapter')) || 0;
+            loadChapter();
+        }
+
+        // 保存阅读进度
+        window.addEventListener('beforeunload', () => {
+            if (currentBook) {
+                localStorage.setItem('lastChapter', currentChapter);
+            }
+        });
+    </script>
+</body>
+</html>
