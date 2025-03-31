@@ -18,6 +18,64 @@
             <h1 class="logo">YRTN</h1>
             <p class="subtitle">Yuanyu Reality TV Network</p>
             <a href="novel.html" class="nav-link">小说阅读</a>
+            <style>
+        /* 新增通知横幅样式 */
+        .notification-banner {
+            position: relative;
+            background: #2196F3;
+            color: white;
+            padding: 12px 40px;
+            text-align: center;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            z-index: 1000;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .notification-content {
+            flex-grow: 1;
+            margin: 0 15px;
+        }
+
+        .notification-close {
+            background: none;
+            border: none;
+            color: white;
+            font-size: 1.2em;
+            cursor: pointer;
+            padding: 0 8px;
+            transition: opacity 0.2s;
+        }
+
+        .notification-close:hover {
+            opacity: 0.8;
+        }
+
+        /* 当横幅存在时调整头部位置 */
+        .main-header {
+            transition: margin-top 0.3s;
+        }
+
+        .has-notification .main-header {
+            margin-top: 50px;
+        }
+
+        @media (max-width: 768px) {
+            .notification-banner {
+                padding: 8px 30px;
+                font-size: 0.9em;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- 新增通知横幅 -->
+    <div class="notification-banner" id="notificationBanner">
+        <div class="notification-content">
+            网站公告：视频挂掉了，等后续恢复
+        </div>
+        <button class="notification-close" onclick="closeNotification()">&times;</button>
         </div>
     </header>
 
