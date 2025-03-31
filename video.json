@@ -1,60 +1,60 @@
 [
     {
-        "title": "VOG BADMINTON PERFORMANCE",
+        "title": "VOG X-TREME 21",
         "description": "Episode 1",
         "episodes": [
             {
-                "title": "20250110",
+                "title": "第一集-20250110",
                 "url": "https://sc2.huang1111.cn/api/v3/slave/download/0/bmV3Mi9iYXNpYy8xMDcxNjEvMjAyNS8wMzA5LzEwMzQvUlBSZXBsYXlfRmluYWwxNzM2NTE0MDYxLm1vdg/EPISODEONE.mov?sign=ZW8NFV9Uk6m2-25Pzv6qO58Lag4rxo2KYeRjCjWbILk%3D%3A1742011114",
                 "thumbnail": "https://img.picgo.net/2025/03/15/IMG_3939039e24e85d09b34a.th.jpeg",
                 "duration": "2:08"
             },
             {
-                "title": "CSS布局实战",
+                "title": "即将上线",
                 "url": "assets/videos/web-dev/ep2.mp4",
                 "thumbnail": "assets/thumbnails/web-dev/ep2.jpg",
-                "duration": "20:45"
+                "duration": "0:00"
             },
             {
-                "title": "JavaScript核心概念",
+                "title": "即将上线",
                 "url": "assets/videos/web-dev/ep3.mp4",
                 "thumbnail": "assets/thumbnails/web-dev/ep3.jpg",
-                "duration": "25:20"
+                "duration": "0:00"
             }
         ]
     },
    
     {
-        "title": "破产姐妹2BrokeGirls",
+        "title": "英语学习专栏",
         "description": "Episode 1",
         "episodes": [
             {
-                "title": "第一季第4集删减版",
+                "title": "看美剧学英语（2 Broke Grils 第一季第4集删减版）",
                 "url": "http://upos-sz-mirrorcos.bilivideo.com/upgcxcode/05/99/27708689905/27708689905-1-192.mp4?e=ig8euxZM2rNcNbR1nwdVhwdlhWR3hwdVhoNvNC8BqJIzNbfq9rVEuxTEnE8L5F6VnEsSTx0vkX8fqJeYTj_lta53NCM=&uipk=5&nbs=1&deadline=1742389871&gen=playurlv2&os=mcdn&oi=1385955528&trid=00002358c33c6079490ca14741beb241b7a3O&mid=0&platform=html5&og=cos&upsig=5ed4bac530cf690fb6482ee91399f48d&uparams=e,uipk,nbs,deadline,gen,os,oi,trid,mid,platform,og&mcdnid=50022019&bvc=vod&nettype=1&orderid=0,3&buvid=&build=7330300&f=O_0_0&bw=118665&logo=A0020000",
                 "thumbnail": "https://img.picgo.net/2025/03/15/IMG_3939039e24e85d09b34a.th.jpeg",
                 "duration": "17:28"
             },
             {
-                "title": "CSS布局实战",
+                "title": "即将上线",
                 "url": "assets/videos/web-dev/ep2.mp4",
                 "thumbnail": "assets/thumbnails/web-dev/ep2.jpg",
-                "duration": "20:45"
+                "duration": "0:00"
             },
             {
-                "title": "JavaScript核心概念",
+                "title": "即将上线",
                 "url": "assets/videos/web-dev/ep3.mp4",
                 "thumbnail": "assets/thumbnails/web-dev/ep3.jpg",
-                "duration": "25:20"
+                "duration": "0:00"
             }
         ]
     },
    
     {
-        "title": "关于css",
+        "title": "HTML类视频学习",
         "description": "十七分钟CSS快速入门 | 无废话且清晰流畅",
         "episodes": [
             {
-                "title": "WEB前端必备程序语言",
+                "title": "CSS-WEB前端必备程序语言",
                 "url": "https://cn-hljheb-ct-01-08.bilivideo.com/upgcxcode/14/51/1417375114/1417375114-1-16.mp4?e=ig8euxZM2rNcNbRVhwdVhwdlhWdVhwdVhoNvNC8BqJIzNbfq9rVEuxTEnE8L5F6VnEsSTx0vkX8fqJeYTj_lta53NCM=&uipk=5&nbs=1&deadline=1742017155&gen=playurlv2&os=bcache&oi=1782024106&trid=000065bf928ced4b49f58a70fbfdb32463c3h&mid=0&platform=html5&og=cos&upsig=06585d98244b9109940824073bf8b4f6&uparams=e,uipk,nbs,deadline,gen,os,oi,trid,mid,platform,og&cdnid=3849&bvc=vod&nettype=0&f=h_0_0&bw=11211&logo=80000000",
                 "thumbnail": "http://i2.hdslb.com/bfs/archive/abe14d738143f4087cb21c715fd9a967915fa9b6.jpg",
                 "duration": "17:25"
