@@ -11,6 +11,36 @@
     <meta property="og:title" content="YRTN">
     <meta property="og:description" content="Yuanyu Reality TV Network">
     <meta property="og:image" content="assets/thumbnails/cover.jpg">
+        <style>
+        /* 新增导航按钮样式（添加到现有样式中） */
+        .nav-link {
+            background: linear-gradient(135deg, #6366f1dd, #8b5cf6dd);
+            color: white !important;
+            padding: 8px 20px;
+            border-radius: 6px;
+            text-decoration: none;
+            transition: all 0.3s ease;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            border: 2px solid rgba(255, 255, 255, 0.15);
+        }
+
+        .nav-link:hover {
+            background: linear-gradient(135deg, #6366f1, #8b5cf6);
+            transform: translateY(-1px);
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2);
+        }
+
+        /* 移动端适配 */
+        @media (max-width: 768px) {
+            .nav-link {
+                margin-top: 15px;
+                display: block;
+                width: fit-content;
+                margin-left: auto;
+                margin-right: auto;
+            }
+        }
+    </style>
 </head>
 <body>
     <header class="main-header">
