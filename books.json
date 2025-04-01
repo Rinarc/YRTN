@@ -1,0 +1,32 @@
+[
+    {
+        "id": "ordinary_world",
+        "title": "平凡的世界",
+        "author": "路遥",
+        "cover": "../assets/covers/ordinary_world.jpg",
+        "desc": "一部全景式表现中国当代城乡社会生活的百万字长篇小说",
+        "chapters": [
+            {
+                "title": "第一章 黄土高原",
+                "content": "1975年二三月间，一个平平常常的日子..."
+            },
+            {
+                "title": "第二章 县城中学",
+                "content": "孙少平拿着黑面馍，走到操场边..."
+            }
+        ]
+    },
+    {
+        "id": "three_body",
+        "title": "三体",
+        "author": "刘慈欣",
+        "cover": "../assets/covers/three_body.jpg",
+        "desc": "中国科幻文学里程碑式的作品",
+        "chapters": [
+            {
+                "title": "第一章 科学边界",
+                "content": "汪淼觉得，来找他的这四个人..."
+            }
+        ]
+    }
+]
