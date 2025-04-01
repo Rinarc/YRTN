@@ -3,18 +3,64 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>小说阅读 - YRTN</title>
+    <title>小说阅读馆 - YRTN</title>
     <style>
-        /* 继承主页主题色 */
         :root {
-            --primary-color: #6366f1;
-            --secondary-color: #8b5cf6;
+            --primary: #6366f1;
+            --secondary: #8b5cf6;
+            --background: linear-gradient(135deg, #f8fafc 0%, #e2e8f0 100%);
         }
 
-        /* 书籍选择器 */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', system-ui, sans-serif;
+        }
+
+        body {
+            background: var(--background);
+            min-height: 100vh;
+        }
+
+        /* 导航栏 */
+        .novel-nav {
+            background: #2c3e50;
+            padding: 1rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        }
+
+        .nav-title {
+            color: white;
+            font-size: 1.5rem;
+        }
+
+        .nav-btn {
+            background: var(--primary);
+            color: white!important;
+            padding: 8px 20px;
+            border-radius: 6px;
+            text-decoration: none;
+            transition: transform 0.2s;
+        }
+
+        .nav-btn:hover {
+            transform: translateY(-2px);
+        }
+
+        /* 书库列表 */
+        .container {
+            max-width: 1200px;
+            margin: 2rem auto;
+            padding: 0 1rem;
+        }
+
         .book-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+            grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
             gap: 2rem;
             padding: 1rem;
         }
@@ -23,8 +69,8 @@
             background: white;
             border-radius: 12px;
             overflow: hidden;
-            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
-            transition: transform 0.3s ease;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.05);
+            transition: transform 0.3s;
             cursor: pointer;
         }
 
@@ -36,7 +82,7 @@
             width: 100%;
             height: 320px;
             object-fit: cover;
-            border-bottom: 3px solid var(--primary-color);
+            border-bottom: 3px solid var(--primary);
         }
 
         .book-info {
@@ -44,101 +90,180 @@
         }
 
         .book-title {
-            color: var(--primary-color);
+            color: var(--primary);
             margin-bottom: 0.5rem;
         }
 
-        .book-author {
-            color: #666;
-            font-size: 0.9em;
+        /* 阅读器 */
+        .reader-container {
+            background: rgba(255,255,255,0.95);
+            backdrop-filter: blur(10px);
+            border-radius: 12px;
+            padding: 2rem;
+            margin: 2rem auto;
+            max-width: 800px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+            display: none;
         }
 
-        .book-desc {
-            margin-top: 1rem;
-            color: #444;
-            font-size: 0.95em;
-            line-height: 1.5;
+        .chapter-title {
+            font-size: 1.5rem;
+            margin-bottom: 1.5rem;
+            position: relative;
+            padding-left: 1rem;
         }
 
-        /* 继承主页按钮样式 */
+        .chapter-title::before {
+            content: '';
+            position: absolute;
+            left: 0;
+            top: 50%;
+            transform: translateY(-50%);
+            width: 4px;
+            height: 80%;
+            background: var(--primary);
+            border-radius: 2px;
+        }
+
+        .content {
+            font-size: 1.1rem;
+            line-height: 1.8;
+            text-indent: 2em;
+            margin-bottom: 2rem;
+        }
+
+        .controls {
+            display: flex;
+            justify-content: space-between;
+            gap: 1rem;
+        }
+
         .btn {
-            background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
-            color: white !important;
+            background: var(--primary);
+            color: white!important;
             padding: 0.8rem 1.5rem;
+            border: none;
             border-radius: 6px;
-            transition: transform 0.2s;
+            cursor: pointer;
+            flex: 1;
+            transition: filter 0.2s;
+        }
+
+        .btn:hover {
+            filter: brightness(1.1);
+        }
+
+        @media (max-width: 768px) {
+            .book-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .reader-container {
+                padding: 1rem;
+                margin: 1rem;
+            }
         }
     </style>
 </head>
 <body>
     <nav class="novel-nav">
-        <h1>YRTN小说馆</h1>
-        <div class="nav-links">
-            <a href="YRTN/index.html" class="btn">返回首页</a>
-            <input type="text" id="search" placeholder="搜索书名或作者">
-        </div>
+        <h1 class="nav-title">YRTN小说馆</h1>
+        <a href="index.html" class="nav-btn">返回首页</a>
     </nav>
 
     <div class="container">
-        <!-- 书籍选择网格 -->
+        <!-- 书库列表 -->
         <div class="book-grid" id="bookGrid"></div>
 
-        <!-- 阅读器容器（初始隐藏） -->
-        <div class="reader-container" id="reader" style="display: none;">
-            <!-- 原有阅读器内容 -->
+        <!-- 阅读器 -->
+        <div class="reader-container" id="reader">
+            <div class="chapter-title" id="chapterTitle"></div>
+            <div class="content" id="content"></div>
+            <div class="controls">
+                <button class="btn" onclick="prevChapter()">上一章</button>
+                <button class="btn" onclick="nextChapter()">下一章</button>
+            </div>
         </div>
     </div>
 
     <script>
-        // 加载书籍数据
+        // 小说数据加载
         async function loadBooks() {
-            const response = await fetch('books.json');
-            return await response.json();
+            try {
+                const response = await fetch('books.json');
+                return await response.json();
+            } catch (error) {
+                console.error('加载书库失败:', error);
+                return [];
+            }
         }
 
-        // 渲染书籍列表
+        // 渲染书库
         async function renderBooks() {
             const books = await loadBooks();
             const grid = document.getElementById('bookGrid');
             
             grid.innerHTML = books.map(book => `
                 <div class="book-card" data-book-id="${book.id}">
-                    <img src="${book.cover}" class="book-cover" alt="${book.title}封面">
+                    <img src="${book.cover}" 
+                         class="book-cover" 
+                         alt="${book.title}封面"
+                         onerror="this.src='./assets/covers/default.jpg'">
                     <div class="book-info">
                         <h3 class="book-title">${book.title}</h3>
                         <p class="book-author">作者：${book.author}</p>
-                        <p class="book-desc">${book.desc}</p>
                     </div>
                 </div>
             `).join('');
 
-            // 添加点击事件
+            // 绑定点击事件
             document.querySelectorAll('.book-card').forEach(card => {
                 card.addEventListener('click', () => openBook(card.dataset.bookId));
             });
         }
 
+        // 阅读器状态
+        let currentBook = null;
+        let currentChapter = 0;
+
         // 打开书籍
         async function openBook(bookId) {
             const books = await loadBooks();
-            const book = books.find(b => b.id === bookId);
+            currentBook = books.find(b => b.id === bookId);
             
-            // 隐藏选择器显示阅读器
+            if (!currentBook) return;
+            
+            // 切换界面
             document.getElementById('bookGrid').style.display = 'none';
             document.getElementById('reader').style.display = 'block';
             
-            // 初始化阅读器
-            initReader(book);
+            // 加载进度
+            currentChapter = parseInt(localStorage.getItem(`lastChapter_${bookId}`)) || 0;
+            updateReader();
         }
 
-        // 初始化阅读器（原有逻辑调整）
-        function initReader(book) {
-            currentBook = book;
-            currentChapter = parseInt(localStorage.getItem(`lastChapter_${book.id}`)) || 0;
-            loadChapter();
+        // 更新阅读器
+        function updateReader() {
+            const chapter = currentBook.chapters[currentChapter];
+            document.getElementById('chapterTitle').textContent = chapter.title;
+            document.getElementById('content').textContent = chapter.content;
+            localStorage.setItem(`lastChapter_${currentBook.id}`, currentChapter);
         }
 
-        // 其余原有阅读器逻辑保持不变...
+        // 章节导航
+        function prevChapter() {
+            if (currentChapter > 0) {
+                currentChapter--;
+                updateReader();
+            }
+        }
+
+        function nextChapter() {
+            if (currentChapter < currentBook.chapters.length - 1) {
+                currentChapter++;
+                updateReader();
+            }
+        }
 
         // 初始化
         renderBooks();
