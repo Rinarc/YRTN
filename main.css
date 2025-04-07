@@ -13,9 +13,19 @@
 }
 
 body {
-    background: var(--background);
-    color: var(--text-color);
-    line-height: 1.6;
+  background: linear-gradient(
+    135deg,
+    #e8f5e9 0%,
+    #f1f8e9 100%
+  );
+  min-height: 100vh;
+}
+
+/* 移动端优化 */
+@media (max-width: 768px) {
+  body {
+    background: #e8f5e9; /* 纯色简化移动端渲染 */
+  }
 }
 
 .container {
