@@ -47,6 +47,163 @@
         <div class="container">
             <h1 class="logo">YRTN VISION</h1>
             <p class="subtitle">Look to the future</p>
+            <div class="overlay" id="announcementOverlay">
+  <div class="announcement-modal">
+    <button class="close-btn" onclick="closeAnnouncement()">&times;</button>
+    <h2>🎉 重要公告</h2>
+    <div class="content">
+      <p>网站全新升级！新增以下功能：</p>
+      <ul>
+        <li>✔️ 夜间模式支持</li>
+        <li>✔️ 视频播放列表</li>
+        <li>✔️ 交互式教程</li>
+      </ul>
+    </div>
+    <div class="preference">
+      <label>
+        <input type="checkbox" id="dontShowAgain"> 七天内不再显示
+      </label>
+      <button class="confirm-btn" onclick="closeAnnouncement()">我知道了</button>
+    </div>
+  </div>
+</div>
+
+<style>
+/* 遮罩层样式 */
+.overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0,0,0,0.6);
+  display: none;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
+  backdrop-filter: blur(3px);
+}
+
+/* 弹窗动画 */
+@keyframes modalSlideIn {
+  from {
+    transform: translateY(-50px);
+    opacity: 0;
+  }
+  to {
+    transform: translateY(0);
+    opacity: 1;
+  }
+}
+
+.announcement-modal {
+  background: white;
+  padding: 2rem;
+  border-radius: 12px;
+  width: 90%;
+  max-width: 500px;
+  position: relative;
+  animation: modalSlideIn 0.3s ease-out;
+}
+
+.close-btn {
+  position: absolute;
+  top: 1rem;
+  right: 1rem;
+  background: none;
+  border: none;
+  font-size: 1.5rem;
+  cursor: pointer;
+  color: #666;
+}
+
+.content {
+  margin: 1rem 0;
+  line-height: 1.6;
+}
+
+.preference {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-top: 1.5rem;
+  padding-top: 1rem;
+  border-top: 1px solid #eee;
+}
+
+.confirm-btn {
+  background: #2196F3;
+  color: white;
+  padding: 8px 20px;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: background 0.3s;
+}
+
+.confirm-btn:hover {
+  background: #1976D2;
+}
+
+@media (max-width: 480px) {
+  .announcement-modal {
+    padding: 1.5rem;
+  }
+  
+  .preference {
+    flex-direction: column;
+    gap: 1rem;
+  }
+}
+</style>
+
+<script>
+// 本地存储管理
+const ANNOUNCEMENT_KEY = 'hideAnnouncement';
+const EXPIRATION_DAYS = 7;
+
+function shouldShowAnnouncement() {
+  const saved = localStorage.getItem(ANNOUNCEMENT_KEY);
+  if (!saved) return true;
+  
+  const { expire } = JSON.parse(saved);
+  return Date.now() > expire;
+}
+
+function setAnnouncementPreference(dontShow) {
+  const expireDate = dontShow 
+    ? Date.now() + (EXPIRATION_DAYS * 86400000)
+    : 0;
+  
+  localStorage.setItem(ANNOUNCEMENT_KEY, 
+    JSON.stringify({ expire: expireDate }));
+}
+
+function showAnnouncement() {
+  if (shouldShowAnnouncement()) {
+    document.getElementById('announcementOverlay').style.display = 'flex';
+    document.body.style.overflow = 'hidden';
+  }
+}
+
+function closeAnnouncement() {
+  const dontShow = document.getElementById('dontShowAgain').checked;
+  setAnnouncementPreference(dontShow);
+  
+  document.getElementById('announcementOverlay').style.display = 'none';
+  document.body.style.overflow = 'auto';
+}
+
+// 页面加载后显示弹窗
+window.addEventListener('load', () => {
+  setTimeout(showAnnouncement, 1000); // 延迟1秒显示
+});
+
+// 防止遮罩层点击穿透
+document.getElementById('announcementOverlay').addEventListener('click', (e) => {
+  if (e.target === e.currentTarget) closeAnnouncement();
+});
+</script>
             <style>
         /* 新增通知横幅样式 */
         .notification-banner {
