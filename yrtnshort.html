@@ -1,0 +1,324 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>YRTN Short</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <style>
+        :root {
+            --primary-color: #fe2c55;
+            --secondary-color: #25f4ee;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        body {
+            background: #000;
+            font-family: -apple-system, sans-serif;
+            overflow: hidden;
+        }
+
+        /* 视频容器 */
+        .video-container {
+            position: relative;
+            height: 100vh;
+            width: 100vw;
+            overflow: hidden;
+        }
+
+        /* 单个视频元素 */
+        .video-item {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            top: 0;
+            left: 0;
+            opacity: 0;
+            transition: transform 0.8s cubic-bezier(0.22, 1, 0.36, 1);
+            transform: translateY(100%);
+        }
+
+        .video-item.active {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        video {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        /* 视频信息层 */
+        .video-info {
+            position: absolute;
+            bottom: 80px;
+            left: 15px;
+            color: white;
+            text-shadow: 1px 1px 3px rgba(0,0,0,0.5);
+            max-width: 70%;
+        }
+
+        .author {
+            display: flex;
+            align-items: center;
+            margin-bottom: 15px;
+        }
+
+        .avatar {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            margin-right: 10px;
+            border: 2px solid var(--primary-color);
+        }
+
+        /* 右侧操作栏 */
+        .action-bar {
+            position: absolute;
+            right: 15px;
+            bottom: 100px;
+            display: flex;
+            flex-direction: column;
+            gap: 25px;
+            color: white;
+        }
+
+        .action-item {
+            text-align: center;
+            cursor: pointer;
+            transition: transform 0.2s;
+        }
+
+        .action-item:hover {
+            transform: scale(1.1);
+        }
+
+        .icon {
+            width: 50px;
+            height: 50px;
+            margin-bottom: 5px;
+        }
+
+        /* 加载动画 */
+        .loader {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            color: white;
+            font-size: 24px;
+            z-index: 100;
+        }
+/* 添加渐变特效 */
+.action-item {
+    background: linear-gradient(45deg, 
+        var(--primary-color), 
+        var(--secondary-color));
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+}
+
+/* 添加加载动画 */
+@keyframes pulse {
+    0% { opacity: 0.6; }
+    50% { opacity: 1; }
+    100% { opacity: 0.6; }
+}
+
+.loader::after {
+    content: '🎬';
+    animation: pulse 1.5s infinite;
+}
+
+        /* 评论弹窗 */
+        .comment-modal {
+            position: fixed;
+            bottom: -100%;
+            left: 0;
+            width: 100%;
+            height: 60vh;
+            background: rgba(0,0,0,0.9);
+            color: white;
+            transition: all 0.3s ease;
+            padding: 20px;
+            border-radius: 20px 20px 0 0;
+        }
+
+        .comment-modal.show {
+            bottom: 0;
+        }
+    </style>
+</head>
+<body>
+    <div class="video-container" id="videoContainer">
+        <div class="loader">加载中...</div>
+    </div>
+
+    <!-- 评论弹窗 -->
+    <div class="comment-modal" id="commentModal">
+        <h3>评论 <span id="commentCount">0</span></h3>
+        <div class="comments-list"></div>
+    </div>
+
+    <script>
+        // sv.json 数据结构
+        /*
+        {
+            "videos": [
+                {
+                    "id": 1,
+                    "url": "video1.mp4",
+                    "author": {
+                        "name": "抖音用户",
+                        "avatar": "avatar1.jpg",
+                        "fans": "123.4万"
+                    },
+                    "description": "这是视频描述内容#热门 #推荐",
+                    "likes": 12345,
+                    "comments": 456,
+                    "shares": 789,
+                    "music": "热门音乐 - 作者"
+                }
+            ]
+        }
+        */
+
+        class DouyinClone {
+            constructor() {
+                this.container = document.getElementById('videoContainer');
+                this.commentModal = document.getElementById('commentModal');
+                this.videoQueue = [];
+                this.currentIndex = 0;
+                this.isSwiping = false;
+                this.touchStartY = 0;
+
+                this.init();
+            }
+
+            async init() {
+                await this.loadVideos();
+                this.createVideoPlayer();
+                this.setupEventListeners();
+                document.querySelector('.loader').remove();
+            }
+
+            async loadVideos() {
+                const response = await fetch('sv.json');
+                const data = await response.json();
+                this.videoQueue = data.videos;
+            }
+
+            createVideoPlayer() {
+                this.videoQueue.forEach((video, index) => {
+                    const videoWrapper = document.createElement('div');
+                    videoWrapper.className = 'video-item';
+                    videoWrapper.innerHTML = `
+                        <video playsinline autoplay muted loop></video>
+                        <div class="video-info">
+                            <div class="author">
+                                <img src="${video.author.avatar}" class="avatar">
+                                <div>
+                                    <h3>${video.author.name}</h3>
+                                    <p>${video.author.fans}粉丝</p>
+                                </div>
+                            </div>
+                            <p>${video.description}</p>
+                            <p>🎵 ${video.music}</p>
+                        </div>
+                        <div class="action-bar">
+                            <div class="action-item" onclick="toggleLike(this)">
+                                <i class="fas fa-heart icon"></i>
+                                <span>${this.formatCount(video.likes)}</span>
+                            </div>
+                            <div class="action-item" onclick="toggleComment()">
+                                <i class="fas fa-comment icon"></i>
+                                <span>${this.formatCount(video.comments)}</span>
+                            </div>
+                            <div class="action-item">
+                                <i class="fas fa-share icon"></i>
+                                <span>${this.formatCount(video.shares)}</span>
+                            </div>
+                        </div>
+                    `;
+                    
+                    videoWrapper.querySelector('video').src = video.url;
+                    this.container.appendChild(videoWrapper);
+                });
+
+                this.showVideo(0);
+            }
+
+            showVideo(index) {
+                document.querySelectorAll('.video-item').forEach(v => 
+                    v.classList.remove('active'));
+                this.container.children[index].classList.add('active');
+            }
+
+            formatCount(num) {
+                return num > 10000 ? (num/10000).toFixed(1) + 'w' : num;
+            }
+
+            setupEventListeners() {
+                // 触摸事件处理
+                this.container.addEventListener('touchstart', e => {
+                    this.touchStartY = e.touches[0].clientY;
+                });
+
+                this.container.addEventListener('touchend', e => {
+                    const deltaY = e.changedTouches[0].clientY - this.touchStartY;
+                    if (Math.abs(deltaY) > 50) {
+                        deltaY > 0 ? this.swipeDown() : this.swipeUp();
+                    }
+                });
+
+                // 滚轮事件
+                this.container.addEventListener('wheel', e => {
+                    if (e.deltaY > 0) this.swipeUp();
+                    else this.swipeDown();
+                });
+            }
+
+            swipeUp() {
+                if (this.currentIndex < this.videoQueue.length - 1) {
+                    this.currentIndex++;
+                    this.showVideo(this.currentIndex);
+                }
+            }
+
+            swipeDown() {
+                if (this.currentIndex > 0) {
+                    this.currentIndex--;
+                    this.showVideo(this.currentIndex);
+                }
+            }
+
+            toggleComment() {
+                this.commentModal.classList.toggle('show');
+            }
+        }
+
+
+
+        // 点赞功能
+        function toggleLike(btn) {
+            const icon = btn.querySelector('i');
+            const isLiked = icon.style.color === 'var(--primary-color)';
+            
+            icon.style.color = isLiked ? '#fff' : 'var(--primary-color)';
+            icon.classList.toggle('fas', !isLiked);
+            icon.classList.toggle('far', isLiked);
+        }
+
+        // 初始化
+        new DouyinClone();
+    </script>
+</body>
+</html>
