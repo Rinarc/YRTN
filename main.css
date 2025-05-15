@@ -151,6 +151,29 @@ body {
     border-radius: 6px;
     object-fit: cover;
 }
+.icon-button {
+  position: absolute;
+  top: 20px;
+  right: 20px;
+  z-index: 100;
+  display: inline-block;
+  width: 40px;
+  height: 40px;
+  border-radius: 8px;
+  background: rgba(255, 255, 255, 0.1);
+  padding: 6px;
+  transition: background 0.3s ease;
+}
+
+.icon-button:hover {
+  background: rgba(255, 255, 255, 0.3);
+}
+
+.icon-button img {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+}
 
 /* 页脚 */
 .main-footer {
