@@ -3,7 +3,8 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>YRTN Short</title>
+    <title>YRTN SHORT</title>
+    <!-- 引入字体图标 -->
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
     <style>
         :root {
@@ -42,6 +43,7 @@
             opacity: 0;
             transition: transform 0.8s cubic-bezier(0.22, 1, 0.36, 1);
             transform: translateY(100%);
+            background: #000; /* 加载时背景 */
         }
 
         .video-item.active {
@@ -63,6 +65,7 @@
             color: white;
             text-shadow: 1px 1px 3px rgba(0,0,0,0.5);
             max-width: 70%;
+            z-index: 2;
         }
 
         .author {
@@ -88,6 +91,7 @@
             flex-direction: column;
             gap: 25px;
             color: white;
+            z-index: 2;
         }
 
         .action-item {
@@ -116,75 +120,53 @@
             font-size: 24px;
             z-index: 100;
         }
-/* 添加渐变特效 */
-.action-item {
-    background: linear-gradient(45deg, 
-        var(--primary-color), 
-        var(--secondary-color));
-    -webkit-background-clip: text;
-    background-clip: text;
-    color: transparent;
-}
 
-/* 添加加载动画 */
-@keyframes pulse {
-    0% { opacity: 0.6; }
-    50% { opacity: 1; }
-    100% { opacity: 0.6; }
-}
-
-.loader::after {
-    content: '🎬';
-    animation: pulse 1.5s infinite;
-}
-
-        /* 评论弹窗 */
-        .comment-modal {
+        /* 声音控制 */
+        .sound-control {
             position: fixed;
-            bottom: -100%;
-            left: 0;
-            width: 100%;
-            height: 60vh;
-            background: rgba(0,0,0,0.9);
+            top: 20px;
+            right: 20px;
+            background: rgba(0,0,0,0.5);
+            border: none;
+            border-radius: 50%;
+            width: 40px;
+            height: 40px;
             color: white;
-            transition: all 0.3s ease;
-            padding: 20px;
-            border-radius: 20px 20px 0 0;
-        }
-
-        .comment-modal.show {
-            bottom: 0;
+            cursor: pointer;
+            z-index: 100;
         }
     </style>
 </head>
 <body>
     <div class="video-container" id="videoContainer">
-        <div class="loader">加载中...</div>
-    </div>
-
-    <!-- 评论弹窗 -->
-    <div class="comment-modal" id="commentModal">
-        <h3>评论 <span id="commentCount">0</span></h3>
-        <div class="comments-list"></div>
+        <div class="loader">🎬 加载中...</div>
+        <button class="sound-control" id="soundControl">
+            <i class="fas fa-volume-mute"></i>
+        </button>
     </div>
 
     <script>
-        // sv.json 数据结构
+        // sv.json 数据结构示例
         /*
         {
             "videos": [
                 {
                     "id": 1,
-                    "url": "video1.mp4",
+                    "sources": [
+                        {"src": "video1.mp4", "type": "video/mp4"},
+                        {"src": "video1.webm", "type": "video/webm"}
+                    ],
                     "author": {
                         "name": "抖音用户",
                         "avatar": "avatar1.jpg",
                         "fans": "123.4万"
                     },
-                    "description": "这是视频描述内容#热门 #推荐",
-                    "likes": 12345,
-                    "comments": 456,
-                    "shares": 789,
+                    "description": "视频描述内容 #热门",
+                    "stats": {
+                        "likes": 12345,
+                        "comments": 456,
+                        "shares": 789
+                    },
                     "music": "热门音乐 - 作者"
                 }
             ]
@@ -194,10 +176,10 @@
         class DouyinClone {
             constructor() {
                 this.container = document.getElementById('videoContainer');
-                this.commentModal = document.getElementById('commentModal');
+                this.soundControl = document.getElementById('soundControl');
+                this.isMuted = true;
                 this.videoQueue = [];
                 this.currentIndex = 0;
-                this.isSwiping = false;
                 this.touchStartY = 0;
 
                 this.init();
@@ -205,72 +187,108 @@
 
             async init() {
                 await this.loadVideos();
-                this.createVideoPlayer();
-                this.setupEventListeners();
+                this.initEventListeners();
+                this.initFirstVideo();
                 document.querySelector('.loader').remove();
             }
 
             async loadVideos() {
-                const response = await fetch('sv.json');
-                const data = await response.json();
-                this.videoQueue = data.videos;
+                try {
+                    const response = await fetch('sv.json');
+                    this.videoQueue = (await response.json()).videos;
+                } catch (error) {
+                    console.error('视频加载失败:', error);
+                    this.showError('视频加载失败，请刷新重试');
+                }
             }
 
-            createVideoPlayer() {
-                this.videoQueue.forEach((video, index) => {
-                    const videoWrapper = document.createElement('div');
-                    videoWrapper.className = 'video-item';
-                    videoWrapper.innerHTML = `
-                        <video playsinline autoplay active loop></video>
-                        <div class="video-info">
-                            <div class="author">
-                                <img src="${video.author.avatar}" class="avatar">
-                                <div>
-                                    <h3>${video.author.name}</h3>
-                                    <p>${video.author.fans}粉丝</p>
-                                </div>
-                            </div>
-                            <p>${video.description}</p>
-                            <p>🎵 ${video.music}</p>
-                        </div>
-                        <div class="action-bar">
-                            <div class="action-item" onclick="toggleLike(this)">
-                                <i class="fas fa-heart icon"></i>
-                                <span>${this.formatCount(video.likes)}</span>
-                            </div>
-                            <div class="action-item" onclick="toggleComment()">
-                                <i class="fas fa-comment icon"></i>
-                                <span>${this.formatCount(video.comments)}</span>
-                            </div>
-                            <div class="action-item">
-                                <i class="fas fa-share icon"></i>
-                                <span>${this.formatCount(video.shares)}</span>
-                            </div>
-                        </div>
-                    `;
-                    
-                    videoWrapper.querySelector('video').src = video.url;
-                    this.container.appendChild(videoWrapper);
+            initFirstVideo() {
+                if (this.videoQueue.length > 0) {
+                    this.createVideoElement(0);
+                }
+            }
+
+            createVideoElement(index) {
+                const videoData = this.videoQueue[index];
+                const videoWrapper = document.createElement('div');
+                videoWrapper.className = 'video-item';
+                
+                // 视频元素
+                const video = document.createElement('video');
+                video.playsInline = true;
+                video.muted = this.isMuted;
+                video.loop = true;
+                
+                // 多源支持
+                videoData.sources.forEach(source => {
+                    const sourceElem = document.createElement('source');
+                    sourceElem.src = source.src;
+                    sourceElem.type = source.type;
+                    video.appendChild(sourceElem);
                 });
 
-                this.showVideo(0);
+                // 信息层
+                const infoLayer = `
+                    <div class="video-info">
+                        <div class="author">
+                            <img src="${videoData.author.avatar}" class="avatar">
+                            <div>
+                                <h3>${videoData.author.name}</h3>
+                                <p>${videoData.author.fans}粉丝</p>
+                            </div>
+                        </div>
+                        <p>${videoData.description}</p>
+                        <p>🎵 ${videoData.music}</p>
+                    </div>
+                    <div class="action-bar">
+                        <div class="action-item" onclick="toggleLike(this)">
+                            <i class="fas fa-heart icon"></i>
+                            <span>${this.formatCount(videoData.stats.likes)}</span>
+                        </div>
+                        <div class="action-item" onclick="toggleComment()">
+                            <i class="fas fa-comment icon"></i>
+                            <span>${this.formatCount(videoData.stats.comments)}</span>
+                        </div>
+                        <div class="action-item">
+                            <i class="fas fa-share icon"></i>
+                            <span>${this.formatCount(videoData.stats.shares)}</span>
+                        </div>
+                    </div>
+                `;
+
+                videoWrapper.innerHTML = infoLayer;
+                videoWrapper.prepend(video);
+                this.container.appendChild(videoWrapper);
+
+                // 视频加载处理
+                video.addEventListener('loadeddata', () => {
+                    videoWrapper.classList.add('active');
+                    video.play().catch(error => {
+                        if(error.name === 'NotAllowedError') {
+                            this.showPlayButton(videoWrapper);
+                        }
+                    });
+                });
+
+                video.addEventListener('error', () => {
+                    this.showError('视频加载失败');
+                });
             }
 
-            showVideo(index) {
-                document.querySelectorAll('.video-item').forEach(v => 
-                    v.classList.remove('active'));
-                this.container.children[index].classList.add('active');
-            }
+            initEventListeners() {
+                // 声音控制
+                this.soundControl.addEventListener('click', () => {
+                    this.isMuted = !this.isMuted;
+                    this.soundControl.innerHTML = this.isMuted ? 
+                        '<i class="fas fa-volume-mute"></i>' : 
+                        '<i class="fas fa-volume-up"></i>';
+                    document.querySelectorAll('video').forEach(v => v.muted = this.isMuted);
+                });
 
-            formatCount(num) {
-                return num > 10000 ? (num/10000).toFixed(1) + 'w' : num;
-            }
-
-            setupEventListeners() {
-                // 触摸事件处理
+                // 触摸事件
                 this.container.addEventListener('touchstart', e => {
                     this.touchStartY = e.touches[0].clientY;
-                });
+                }, { passive: true });
 
                 this.container.addEventListener('touchend', e => {
                     const deltaY = e.changedTouches[0].clientY - this.touchStartY;
@@ -281,9 +299,9 @@
 
                 // 滚轮事件
                 this.container.addEventListener('wheel', e => {
-                    if (e.deltaY > 0) this.swipeUp();
-                    else this.swipeDown();
-                });
+                    if (e.deltaY > 5) this.swipeUp();
+                    else if (e.deltaY < -5) this.swipeDown();
+                }, { passive: false });
             }
 
             swipeUp() {
@@ -300,25 +318,73 @@
                 }
             }
 
-            toggleComment() {
-                this.commentModal.classList.toggle('show');
+            showVideo(index) {
+                document.querySelectorAll('.video-item').forEach(item => {
+                    item.classList.remove('active');
+                });
+                
+                if (!this.container.children[index]) {
+                    this.createVideoElement(index);
+                }
+                
+                setTimeout(() => {
+                    this.container.children[index].classList.add('active');
+                }, 50);
             }
-        }
 
+            formatCount(num) {
+                return num > 10000 ? (num/10000).toFixed(1) + 'w' : num;
+            }
 
+            showError(message) {
+                const errorDiv = document.createElement('div');
+                errorDiv.style = `
+                    position: fixed;
+                    top: 50%;
+                    left: 50%;
+                    transform: translate(-50%, -50%);
+                    color: white;
+                    background: rgba(0,0,0,0.8);
+                    padding: 20px;
+                    border-radius: 10px;
+                `;
+                errorDiv.textContent = message;
+                document.body.appendChild(errorDiv);
+            }
 
-        // 点赞功能
-        function toggleLike(btn) {
-            const icon = btn.querySelector('i');
-            const isLiked = icon.style.color === 'var(--primary-color)';
-            
-            icon.style.color = isLiked ? '#fff' : 'var(--primary-color)';
-            icon.classList.toggle('fas', !isLiked);
-            icon.classList.toggle('far', isLiked);
+            showPlayButton(container) {
+                const playBtn = document.createElement('button');
+                playBtn.style = `
+                    position: absolute;
+                    top: 50%;
+                    left: 50%;
+                    transform: translate(-50%, -50%);
+                    background: rgba(0,0,0,0.5);
+                    border: none;
+                    border-radius: 50%;
+                    width: 60px;
+                    height: 60px;
+                    color: white;
+                    cursor: pointer;
+                `;
+                playBtn.innerHTML = '<i class="fas fa-play"></i>';
+                playBtn.onclick = () => {
+                    container.querySelector('video').play();
+                    playBtn.remove();
+                };
+                container.appendChild(playBtn);
+            }
         }
 
         // 初始化
         new DouyinClone();
+
+        // 点赞功能
+        function toggleLike(btn) {
+            const icon = btn.querySelector('i');
+            icon.style.color = icon.style.color === 'var(--primary-color)' ? 
+                '#fff' : 'var(--primary-color)';
+        }
     </script>
 </body>
 </html>
