@@ -75,7 +75,13 @@
     </div>
   </div>
 </div>
-
+<script>
+function forceShowAnnouncement() {
+  localStorage.removeItem('hideAnnouncement');
+  document.getElementById('announcementOverlay').style.display = 'flex';
+  document.body.style.overflow = 'hidden';
+}
+</script>
 <style>
 /* 遮罩层样式 */
 .overlay {
