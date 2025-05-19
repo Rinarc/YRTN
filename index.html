@@ -8,92 +8,61 @@
     <link rel="stylesheet" href="https://cdn.plyr.io/3.7.8/plyr.css">
     <link rel="stylesheet" href="main.css">
     
+    <!-- 全站样式 -->
     <style>
-    /* ======= 图片启动动画 ======= */
+    /* ======= 启动动画 ======= */
     .splash-screen {
         position: fixed;
         top: 0;
         left: 0;
         width: 100%;
         height: 100%;
-        background: #ffffff;
+        background: linear-gradient(135deg, #6366f1 0%, #8b5cf6 100%);
         display: flex;
         justify-content: center;
         align-items: center;
         z-index: 9999;
         opacity: 1;
-        transition: opacity 0.8s cubic-bezier(0.4, 0, 0.2, 1);
+        transition: opacity 0.5s ease-out;
     }
 
-    .splash-image {
-        width: auto;
-        height: auto;
-        max-width: min(600px, 80%);
-        max-height: 70vh;
-        opacity: 0;
-        transform: scale(0.9);
-        animation: splashAnim 2s cubic-bezier(0.4, 0, 0.2, 1) forwards;
-        image-rendering: -webkit-optimize-contrast;
+    .splash-logo {
+        font-size: 3em;
+        font-weight: bold;
+        animation: splashAnim 1.5s ease-in-out forwards;
+        color: white;
+        text-shadow: 2px 2px 4px rgba(0,0,0,0.2);
+        font-family: 'Arial', sans-serif;
     }
 
     @keyframes splashAnim {
-        0% {
-            opacity: 0;
-            transform: scale(0.8) rotate(-5deg);
-        }
-        30% {
-            opacity: 1;
-            transform: scale(1.05) rotate(2deg);
-        }
-        70% {
-            opacity: 1;
-            transform: scale(0.98) rotate(-1deg);
-        }
-        100% {
-            opacity: 0;
-            transform: scale(1.3) rotate(0deg);
-        }
+        0% { opacity: 0; transform: scale(0.8) rotate(-10deg); }
+        30% { opacity: 1; transform: scale(1.1) rotate(5deg); }
+        60% { transform: scale(0.95) rotate(-2deg); }
+        100% { opacity: 0; transform: scale(1.5) rotate(0deg); }
     }
 
-    /* ======= 全局样式 ======= */
-    body {
-        font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
-        background: #f8f9fa;
+    .splash-screen.hide {
+        opacity: 0;
+        pointer-events: none;
     }
 
-    .main-header {
-        background: linear-gradient(135deg, #6366f1 0%, #8b5cf6 100%);
-        color: white;
-        padding: 1.5rem 0;
-        box-shadow: 0 2px 8px rgba(0,0,0,0.1);
-        position: relative;
-        z-index: 100;
+    /* ======= 导航按钮 ======= */
+    .nav-link {
+        background: linear-gradient(135deg, #6366f1dd, #8b5cf6dd);
+        color: white !important;
+        padding: 8px 20px;
+        border-radius: 6px;
+        text-decoration: none;
+        transition: all 0.3s ease;
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        border: 2px solid rgba(255, 255, 255, 0.15);
     }
 
-    .logo {
-        font-size: 2.2rem;
-        font-weight: 700;
-        letter-spacing: -0.5px;
-        text-shadow: 1px 1px 2px rgba(0,0,0,0.1);
-    }
-
-    .icon-button {
-        position: absolute;
-        top: 1.5rem;
-        right: 1.5rem;
-        width: 40px;
-        height: 40px;
-        transition: transform 0.2s ease;
-    }
-
-    .icon-button:hover {
-        transform: scale(1.1);
-    }
-
-    .icon-button img {
-        width: 100%;
-        height: 100%;
-        object-fit: contain;
+    .nav-link:hover {
+        background: linear-gradient(135deg, #6366f1, #8b5cf6);
+        transform: translateY(-1px);
+        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2);
     }
 
     /* ======= 公告系统 ======= */
@@ -107,68 +76,51 @@
         display: none;
         justify-content: center;
         align-items: center;
-        z-index: 2000;
-        backdrop-filter: blur(5px);
+        z-index: 1000;
+        backdrop-filter: blur(3px);
     }
 
     .announcement-modal {
         background: white;
         padding: 2rem;
-        border-radius: 16px;
-        width: min(90%, 560px);
-        box-shadow: 0 8px 32px rgba(0,0,0,0.12);
-        animation: modalSlideIn 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+        border-radius: 12px;
+        width: 90%;
+        max-width: 500px;
+        position: relative;
+        animation: modalSlideIn 0.3s ease-out;
     }
 
     @keyframes modalSlideIn {
-        from { transform: translateY(20px); opacity: 0; }
+        from { transform: translateY(-50px); opacity: 0; }
         to { transform: translateY(0); opacity: 1; }
     }
 
     /* ======= 通知横幅 ======= */
     .notification-banner {
-        background: #e3f2fd;
-        color: #1976d2;
-        padding: 12px 2rem;
+        position: relative;
+        background: #6495ed;
+        color: black;
+        padding: 12px 40px;
+        text-align: center;
+        box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        z-index: 1000;
         display: flex;
         justify-content: space-between;
         align-items: center;
-        box-shadow: 0 2px 4px rgba(0,0,0,0.05);
-        position: relative;
-        z-index: 90;
     }
 
-    .notification-close {
-        background: none;
-        border: none;
-        font-size: 1.4rem;
-        color: inherit;
-        padding: 0 0.5rem;
-        cursor: pointer;
-        transition: opacity 0.2s;
-    }
-
-    .notification-close:hover {
-        opacity: 0.8;
-    }
-
-    /* ======= 响应式设计 ======= */
+    /* 移动端适配 */
     @media (max-width: 768px) {
-        .logo { font-size: 1.8rem; }
-        .icon-button { width: 36px; height: 36px; }
-        .splash-image { max-width: 85%; }
-        .announcement-modal { padding: 1.5rem; }
+        .nav-link { margin-top: 15px; }
+        .notification-banner { padding: 8px 30px; }
     }
     </style>
 </head>
 
 <body>
-    <!-- 图片启动动画 -->
+    <!-- 启动动画 -->
     <div class="splash-screen">
-        <img src="https://img.picgo.net/2025/05/19/knockout7bf0f08e38442e85.png" 
-             class="splash-image" 
-             alt="YRTN Logo"
-             loading="eager">
+        <div class="splash-logo">YRTN VISION</div>
     </div>
 
     <!-- 通知横幅 -->
@@ -193,31 +145,20 @@
             <div class="overlay" id="announcementOverlay">
                 <div class="announcement-modal">
                     <button class="close-btn" onclick="closeAnnouncement()">&times;</button>
-                    <h2 style="color: #1a237e;">🎉 重要公告</h2>
+                    <h2 style="color: #333;">🎉 重要公告</h2>
                     <div class="content">
-                        <p style="color: #444;">很高兴为您带来以下新更新：</p>
-                        <ul style="list-style: none; padding-left: 1.2rem;">
-                            <li style="margin-bottom: 0.8rem;">
-                                <span style="color: #4caf50;">✔</span> 短视频功能升级！支持静音切换
-                            </li>
-                            <li style="margin-bottom: 0.8rem;">
-                                <span style="color: #4caf50;">✔</span> 新增公告系统
-                            </li>
-                            <li>
-                                <span style="color: #4caf50;">✔</span> 性能优化提升
-                            </li>
+                        <p style="color: #333;">很高兴为您带来以下新更新：</p>
+                        <ul>
+                            <li style="color: #666;">✔️-短视频功能升级！可自行选择静音与否；提升使用体验！</li>
+                            <li style="color: #666;">✔️-您可以点击右上角图标前往短视频或查看公告</li>
+                            <li style="color: #666;">✔️-修复了一些已知问题，顺便偷偷内卷（）</li>
                         </ul>
                     </div>
-                    <div class="preference" style="margin-top: 1.5rem;">
-                        <label style="display: flex; align-items: center; gap: 0.5rem;">
-                            <input type="checkbox" id="dontShowAgain" style="accent-color: #4caf50;">
-                            <span style="color: #666;">七天内不再显示</span>
+                    <div class="preference">
+                        <label style="color: #666;">
+                            <input type="checkbox" id="dontShowAgain"> 七天内不再显示
                         </label>
-                        <button class="confirm-btn" 
-                                onclick="closeAnnouncement()"
-                                style="background: #4caf50; color: white; padding: 8px 24px; border-radius: 6px; border: none; margin-top: 1rem;">
-                            我知道了
-                        </button>
+                        <button class="confirm-btn" onclick="closeAnnouncement()">我知道了</button>
                     </div>
                 </div>
             </div>
@@ -228,34 +169,23 @@
     <main class="container layout-grid">
         <aside class="series-list" id="seriesList"></aside>
         <section class="main-content">
-            <div class="player-container" style="border-radius: 12px; overflow: hidden; box-shadow: 0 4px 12px rgba(0,0,0,0.1);">
-                <video id="player" playsinline controls style="width: 100%; height: auto;"></video>
+            <div class="player-container">
+                <video id="player" playsinline controls></video>
             </div>
-            <div class="episode-controls" style="margin: 1.5rem 0; display: flex; justify-content: center; gap: 1rem;">
-                <button class="btn prev" 
-                        onclick="changeEpisode(-1)"
-                        style="background: #4caf50; color: white; padding: 8px 20px; border: none; border-radius: 6px;">
-                    ← 上一集
-                </button>
-                <span class="episode-counter" id="episodeCounter" style="color: #666;"></span>
-                <button class="btn next" 
-                        onclick="changeEpisode(1)"
-                        style="background: #4caf50; color: white; padding: 8px 20px; border: none; border-radius: 6px;">
-                    下一集 →
-                </button>
+            <div class="episode-controls">
+                <button class="btn prev" onclick="changeEpisode(-1)">← 上一集</button>
+                <span class="episode-counter" id="episodeCounter"></span>
+                <button class="btn next" onclick="changeEpisode(1)">下一集 →</button>
             </div>
-            <div class="series-info" id="seriesInfo" style="background: white; padding: 1.5rem; border-radius: 8px; box-shadow: 0 2px 8px rgba(0,0,0,0.05);"></div>
-            <div class="episode-list" id="episodeList" style="margin-top: 2rem;"></div>
+            <div class="series-info" id="seriesInfo"></div>
+            <div class="episode-list" id="episodeList"></div>
         </section>
     </main>
 
     <!-- 页脚 -->
-    <footer class="main-footer" style="margin-top: 3rem; padding: 2rem 0; background: #f5f5f5;">
+    <footer class="main-footer">
         <div class="container">
-            <p style="text-align: center; color: #666;">
-                © 2025 YRTN VISION · 
-                <a href="https://pages.github.com/" target="_blank" style="color: #4caf50; text-decoration: none;">GitHub Pages驱动</a>
-            </p>
+            <p>© 2025 YRTN VISION · 基于 <a href="https://pages.github.com/" target="_blank">GitHub Pages</a></p>
         </div>
     </footer>
 
@@ -263,74 +193,60 @@
     <script src="https://cdn.plyr.io/3.7.8/plyr.js"></script>
     <script src="main.js"></script>
 
+    <!-- 全局脚本 -->
     <script>
     // 启动动画控制
-    {
-        let splashRemoved = false;
+    let splashTimer;
+    window.addEventListener('load', () => {
         const splashScreen = document.querySelector('.splash-screen');
         
-        // 预加载logo图片
-        const splashImg = new Image();
-        splashImg.src = 'https://img.picgo.net/2025/05/19/knockout7bf0f08e38442e85.png';
-        splashImg.onload = () => {
-            if(!splashRemoved) splashScreen.querySelector('img').style.opacity = 1;
-        }
-
-        // 动画计时器
-        setTimeout(() => {
-            splashScreen.style.opacity = '0';
-            setTimeout(() => {
-                splashScreen.remove();
-                splashRemoved = true;
-                document.body.style.overflow = 'auto';
-            }, 800);
-        }, 2200);
-    }
+        splashTimer = setTimeout(() => {
+            splashScreen.classList.add('hide');
+            setTimeout(() => splashScreen.remove(), 500);
+        }, 1500);
+    });
 
     // 公告系统
-    const announcement = {
-        key: 'yr_announcement',
-        expiration: 7 * 86400000,
+    const ANNOUNCEMENT_KEY = 'hideAnnouncement';
+    const EXPIRATION_DAYS = 7;
 
-        show() {
-            if(!localStorage.getItem(this.key) || JSON.parse(localStorage.getItem(this.key)).expire < Date.now()) {
-                document.getElementById('announcementOverlay').style.display = 'flex';
-                document.body.style.overflow = 'hidden';
-            }
-        },
+    function forceShowAnnouncement() {
+        localStorage.removeItem(ANNOUNCEMENT_KEY);
+        document.getElementById('announcementOverlay').style.display = 'flex';
+        document.body.style.overflow = 'hidden';
+    }
 
-        hide() {
-            const dontShow = document.getElementById('dontShowAgain').checked;
-            if(dontShow) {
-                localStorage.setItem(this.key, JSON.stringify({
-                    expire: Date.now() + this.expiration
+    function shouldShowAnnouncement() {
+        const saved = localStorage.getItem(ANNOUNCEMENT_KEY);
+        return !saved || Date.now() > JSON.parse(saved).expire;
+    }
+
+    function closeAnnouncement() {
+        const dontShow = document.getElementById('dontShowAgain').checked;
+        if(dontShow) {
+            localStorage.setItem(ANNOUNCEMENT_KEY, 
+                JSON.stringify({ 
+                    expire: Date.now() + (EXPIRATION_DAYS * 86400000) 
                 }));
-            }
-            document.getElementById('announcementOverlay').style.display = 'none';
-            document.body.style.overflow = 'auto';
-        },
-
-        forceShow() {
-            localStorage.removeItem(this.key);
-            this.show();
         }
-    };
+        document.getElementById('announcementOverlay').style.display = 'none';
+        document.body.style.overflow = 'auto';
+    }
 
     // 通知横幅
     function closeNotification() {
         document.getElementById('notificationBanner').style.display = 'none';
+        document.querySelector('.main-header').classList.remove('has-notification');
     }
 
-    // 事件绑定
-    document.getElementById('announcementOverlay').addEventListener('click', e => {
-        if(e.target === e.currentTarget) announcement.hide();
+    // 防止遮罩层点击穿透
+    document.getElementById('announcementOverlay').addEventListener('click', (e) => {
+        if(e.target === e.currentTarget) closeAnnouncement();
     });
 
-    // 初始化播放器
-    const player = new Plyr('#player', {
-        controls: ['play', 'progress', 'current-time', 'mute', 'volume', 'settings', 'fullscreen'],
-        settings: ['quality', 'speed'],
-        ratio: '16:9'
+    // 页面卸载时清理
+    window.addEventListener('beforeunload', () => {
+        clearTimeout(splashTimer);
     });
     </script>
 </body>
