@@ -8,9 +8,8 @@
     <link rel="stylesheet" href="https://cdn.plyr.io/3.7.8/plyr.css">
     <link rel="stylesheet" href="main.css">
     
-    <!-- 全站样式 -->
     <style>
-    /* ======= 启动动画 ======= */
+    /* ======= 文字启动动画 ======= */
     .splash-screen {
         position: fixed;
         top: 0;
@@ -42,30 +41,7 @@
         100% { opacity: 0; transform: scale(1.5) rotate(0deg); }
     }
 
-    .splash-screen.hide {
-        opacity: 0;
-        pointer-events: none;
-    }
-
-    /* ======= 导航按钮 ======= */
-    .nav-link {
-        background: linear-gradient(135deg, #6366f1dd, #8b5cf6dd);
-        color: white !important;
-        padding: 8px 20px;
-        border-radius: 6px;
-        text-decoration: none;
-        transition: all 0.3s ease;
-        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-        border: 2px solid rgba(255, 255, 255, 0.15);
-    }
-
-    .nav-link:hover {
-        background: linear-gradient(135deg, #6366f1, #8b5cf6);
-        transform: translateY(-1px);
-        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2);
-    }
-
-    /* ======= 公告系统 ======= */
+    /* ======= 原有公告样式 ======= */
     .overlay {
         position: fixed;
         top: 0;
@@ -95,6 +71,45 @@
         to { transform: translateY(0); opacity: 1; }
     }
 
+    .close-btn {
+        position: absolute;
+        top: 1rem;
+        right: 1rem;
+        background: none;
+        border: none;
+        font-size: 1.5rem;
+        cursor: pointer;
+        color: #666;
+    }
+
+    .content {
+        margin: 1rem 0;
+        line-height: 1.6;
+    }
+
+    .preference {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-top: 1.5rem;
+        padding-top: 1rem;
+        border-top: 1px solid #eee;
+    }
+
+    .confirm-btn {
+        background: #2196F3;
+        color: white;
+        padding: 8px 20px;
+        border: none;
+        border-radius: 6px;
+        cursor: pointer;
+        transition: background 0.3s;
+    }
+
+    .confirm-btn:hover {
+        background: #1976D2;
+    }
+
     /* ======= 通知横幅 ======= */
     .notification-banner {
         position: relative;
@@ -109,16 +124,49 @@
         align-items: center;
     }
 
-    /* 移动端适配 */
+    /* ======= 主站样式 ======= */
+    .main-header {
+        background: linear-gradient(135deg, #6366f1 0%, #8b5cf6 100%);
+        color: white;
+        padding: 1.5rem 0;
+        box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+    }
+
+    .logo {
+        font-size: 2.2rem;
+        font-weight: 700;
+        text-shadow: 1px 1px 2px rgba(0,0,0,0.1);
+    }
+
+    .icon-button {
+        position: absolute;
+        top: 1.5rem;
+        right: 1.5rem;
+        width: 40px;
+        height: 40px;
+        transition: transform 0.2s ease;
+    }
+
+    .icon-button:hover {
+        transform: scale(1.1);
+    }
+
+    .icon-button img {
+        width: 100%;
+        height: 100%;
+        object-fit: contain;
+    }
+
     @media (max-width: 768px) {
-        .nav-link { margin-top: 15px; }
-        .notification-banner { padding: 8px 30px; }
+        .logo { font-size: 1.8rem; }
+        .icon-button { width: 36px; height: 36px; }
+        .splash-logo { font-size: 2.5em; }
     }
     </style>
 </head>
 
 <body>
-    <!-- 启动动画 -->
+    <!-- 文字启动动画 -->
     <div class="splash-screen">
         <div class="splash-logo">YRTN VISION</div>
     </div>
@@ -193,16 +241,25 @@
     <script src="https://cdn.plyr.io/3.7.8/plyr.js"></script>
     <script src="main.js"></script>
 
-    <!-- 全局脚本 -->
     <script>
     // 启动动画控制
-    let splashTimer;
     window.addEventListener('load', () => {
         const splashScreen = document.querySelector('.splash-screen');
         
-        splashTimer = setTimeout(() => {
+        // 动画持续1.5秒
+        setTimeout(() => {
             splashScreen.classList.add('hide');
-            setTimeout(() => splashScreen.remove(), 500);
+            
+            // 完全移除元素
+            setTimeout(() => {
+                splashScreen.remove();
+                
+                // 显示公告（原逻辑）
+                if(shouldShowAnnouncement()) {
+                    document.getElementById('announcementOverlay').style.display = 'flex';
+                    document.body.style.overflow = 'hidden';
+                }
+            }, 500);
         }, 1500);
     });
 
@@ -218,7 +275,8 @@
 
     function shouldShowAnnouncement() {
         const saved = localStorage.getItem(ANNOUNCEMENT_KEY);
-        return !saved || Date.now() > JSON.parse(saved).expire;
+        if (!saved) return true;
+        return Date.now() > JSON.parse(saved).expire;
     }
 
     function closeAnnouncement() {
@@ -236,17 +294,11 @@
     // 通知横幅
     function closeNotification() {
         document.getElementById('notificationBanner').style.display = 'none';
-        document.querySelector('.main-header').classList.remove('has-notification');
     }
 
     // 防止遮罩层点击穿透
     document.getElementById('announcementOverlay').addEventListener('click', (e) => {
-        if(e.target === e.currentTarget) closeAnnouncement();
-    });
-
-    // 页面卸载时清理
-    window.addEventListener('beforeunload', () => {
-        clearTimeout(splashTimer);
+        if (e.target === e.currentTarget) closeAnnouncement();
     });
     </script>
 </body>
