@@ -6,16 +6,9 @@
     <meta name="description" content="YRTN">
     <title>YRTN VISION | Look to the future</title>
     <link rel="stylesheet" href="https://cdn.plyr.io/3.7.8/plyr.css">
+    <link rel="stylesheet" href="main.css">
+    
     <style>
-    :root {
-        --primary: #6366f1;
-        --secondary: #8b5cf6;
-        --accent: #4f46e5;
-        --text: #1e293b;
-        --bg: #f8fafc;
-        --shadow: 0 4px 6px -1px rgba(0,0,0,0.1);
-    }
-
     /* ======= 文字启动动画 ======= */
     .splash-screen {
         position: fixed;
@@ -23,77 +16,32 @@
         left: 0;
         width: 100%;
         height: 100%;
-        background: linear-gradient(135deg, var(--primary), var(--secondary));
+        background: linear-gradient(135deg, #6366f1 0%, #8b5cf6 100%);
         display: flex;
         justify-content: center;
         align-items: center;
         z-index: 9999;
         opacity: 1;
-        transition: opacity 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+        transition: opacity 0.5s ease-out;
     }
 
     .splash-logo {
-        font-size: 3.5rem;
-        font-weight: 800;
+        font-size: 3em;
+        font-weight: bold;
+        animation: splashAnim 1.5s ease-in-out forwards;
         color: white;
-        font-family: system-ui;
-        animation: 
-            splashScale 1.2s ease-in-out forwards,
-            textGlow 2s ease-in-out infinite;
+        text-shadow: 2px 2px 4px rgba(0,0,0,0.2);
+        font-family: 'Arial', sans-serif;
     }
 
-    @keyframes splashScale {
-        0% { opacity: 0; transform: scale(0.8) rotate(-5deg); }
-        40% { opacity: 1; transform: scale(1.05) rotate(2deg); }
-        100% { opacity: 0; transform: scale(1.5); }
+    @keyframes splashAnim {
+        0% { opacity: 0; transform: scale(0.8) rotate(-10deg); }
+        30% { opacity: 1; transform: scale(1.1) rotate(5deg); }
+        60% { transform: scale(0.95) rotate(-2deg); }
+        100% { opacity: 0; transform: scale(1.5) rotate(0deg); }
     }
 
-    @keyframes textGlow {
-        50% { text-shadow: 0 0 20px rgba(255,255,255,0.3); }
-    }
-
-    /* ======= 主站样式 ======= */
-    body {
-        font-family: system-ui;
-        background: var(--bg);
-        color: var(--text);
-        line-height: 1.6;
-    }
-
-    .main-header {
-        background: linear-gradient(135deg, var(--primary), var(--secondary));
-        padding: 1.2rem 0;
-        box-shadow: var(--shadow);
-        position: relative;
-    }
-
-    .logo {
-        font-size: 2.4rem;
-        font-weight: 700;
-        color: white;
-        text-shadow: 0 2px 4px rgba(0,0,0,0.1);
-        transition: transform 0.3s ease;
-    }
-
-    .logo:hover {
-        transform: translateY(-2px);
-    }
-
-    .icon-button {
-        background: rgba(255,255,255,0.1);
-        backdrop-filter: blur(4px);
-        border-radius: 12px;
-        padding: 10px;
-        transition: all 0.3s ease;
-        box-shadow: 0 2px 4px rgba(0,0,0,0.05);
-    }
-
-    .icon-button:hover {
-        background: rgba(255,255,255,0.2);
-        transform: translateY(-2px);
-    }
-
-    /* ======= 公告系统 ======= */
+    /* ======= 原有公告样式 ======= */
     .overlay {
         position: fixed;
         top: 0;
@@ -104,21 +52,22 @@
         display: none;
         justify-content: center;
         align-items: center;
-        z-index: 2000;
-        backdrop-filter: blur(5px);
+        z-index: 1000;
+        backdrop-filter: blur(3px);
     }
 
     .announcement-modal {
         background: white;
         padding: 2rem;
-        border-radius: 16px;
-        width: min(90%, 560px);
-        box-shadow: var(--shadow);
+        border-radius: 12px;
+        width: 90%;
+        max-width: 500px;
+        position: relative;
         animation: modalSlideIn 0.3s ease-out;
     }
 
     @keyframes modalSlideIn {
-        from { transform: translateY(-20px); opacity: 0; }
+        from { transform: translateY(-50px); opacity: 0; }
         to { transform: translateY(0); opacity: 1; }
     }
 
@@ -133,45 +82,91 @@
         color: #666;
     }
 
-    /* ======= 播放器样式 ======= */
-    .player-container {
-        border-radius: 16px;
-        overflow: hidden;
-        box-shadow: var(--shadow);
-        transition: transform 0.3s ease;
+    .content {
+        margin: 1rem 0;
+        line-height: 1.6;
     }
 
-    .player-container:hover {
-        transform: translateY(-3px);
+    .preference {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-top: 1.5rem;
+        padding-top: 1rem;
+        border-top: 1px solid #eee;
     }
 
-    /* ======= 控制按钮 ======= */
-    .episode-controls .btn {
-        background: linear-gradient(135deg, var(--primary), var(--secondary));
+    .confirm-btn {
+        background: #2196F3;
         color: white;
+        padding: 8px 20px;
         border: none;
-        border-radius: 8px;
-        padding: 10px 24px;
-        font-weight: 500;
-        transition: all 0.3s ease;
+        border-radius: 6px;
+        cursor: pointer;
+        transition: background 0.3s;
     }
 
-    .btn:hover {
-        transform: translateY(-2px);
-        box-shadow: 0 4px 6px rgba(99,102,241,0.2);
+    .confirm-btn:hover {
+        background: #1976D2;
     }
 
-    /* ======= 响应式设计 ======= */
+    /* ======= 通知横幅 ======= */
+    .notification-banner {
+        position: relative;
+        background: #6495ed;
+        color: black;
+        padding: 12px 40px;
+        text-align: center;
+        box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        z-index: 1000;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+    }
+
+    /* ======= 主站样式 ======= */
+    .main-header {
+        background: linear-gradient(135deg, #6366f1 0%, #8b5cf6 100%);
+        color: white;
+        padding: 1.5rem 0;
+        box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+    }
+
+    .logo {
+        font-size: 2.2rem;
+        font-weight: 700;
+        text-shadow: 1px 1px 2px rgba(0,0,0,0.1);
+    }
+
+    .icon-button {
+        position: absolute;
+        top: 1.5rem;
+        right: 1.5rem;
+        width: 40px;
+        height: 40px;
+        transition: transform 0.2s ease;
+    }
+
+    .icon-button:hover {
+        transform: scale(1.1);
+    }
+
+    .icon-button img {
+        width: 100%;
+        height: 100%;
+        object-fit: contain;
+    }
+
     @media (max-width: 768px) {
-        .logo { font-size: 2rem; }
-        .splash-logo { font-size: 2.5rem; }
-        .icon-button { padding: 8px; }
+        .logo { font-size: 1.8rem; }
+        .icon-button { width: 36px; height: 36px; }
+        .splash-logo { font-size: 2.5em; }
     }
     </style>
 </head>
 
 <body>
-    <!-- 启动动画 -->
+    <!-- 文字启动动画 -->
     <div class="splash-screen">
         <div class="splash-logo">YRTN VISION</div>
     </div>
@@ -198,20 +193,20 @@
             <div class="overlay" id="announcementOverlay">
                 <div class="announcement-modal">
                     <button class="close-btn" onclick="closeAnnouncement()">&times;</button>
-                    <h2 style="color: var(--text);">🎉 重要公告</h2>
+                    <h2 style="color: #333;">🎉 重要公告</h2>
                     <div class="content">
-                        <p>很高兴为您带来以下新更新：</p>
+                        <p style="color: #333;">很高兴为您带来以下新更新：</p>
                         <ul>
-                            <li>✔️ 短视频功能升级！可自行选择静音与否</li>
-                            <li>✔️ 新增可视化数据面板</li>
-                            <li>✔️ 性能优化提升</li>
+                            <li style="color: #666;">✔️-短视频功能升级！可自行选择静音与否；提升使用体验！</li>
+                            <li style="color: #666;">✔️-您可以点击右上角图标前往短视频或查看公告</li>
+                            <li style="color: #666;">✔️-修复了一些已知问题，顺便偷偷内卷（）</li>
                         </ul>
                     </div>
                     <div class="preference">
-                        <label>
+                        <label style="color: #666;">
                             <input type="checkbox" id="dontShowAgain"> 七天内不再显示
                         </label>
-                        <button class="btn confirm-btn" onclick="closeAnnouncement()">我知道了</button>
+                        <button class="confirm-btn" onclick="closeAnnouncement()">我知道了</button>
                     </div>
                 </div>
             </div>
@@ -242,51 +237,58 @@
         </div>
     </footer>
 
+    <!-- 脚本 -->
     <script src="https://cdn.plyr.io/3.7.8/plyr.js"></script>
+    <script src="main.js"></script>
+
     <script>
     // 启动动画控制
     window.addEventListener('load', () => {
         const splashScreen = document.querySelector('.splash-screen');
         
+        // 动画持续1.5秒
         setTimeout(() => {
-            splashScreen.style.opacity = '0';
+            splashScreen.classList.add('hide');
+            
+            // 完全移除元素
             setTimeout(() => {
                 splashScreen.remove();
-                checkAnnouncement();
-            }, 600);
+                
+                // 显示公告（原逻辑）
+                if(shouldShowAnnouncement()) {
+                    document.getElementById('announcementOverlay').style.display = 'flex';
+                    document.body.style.overflow = 'hidden';
+                }
+            }, 500);
         }, 1500);
     });
 
     // 公告系统
-    const ANNOUNCE_KEY = 'yr_announcement';
-    const EXPIRE_DAYS = 7;
+    const ANNOUNCEMENT_KEY = 'hideAnnouncement';
+    const EXPIRATION_DAYS = 7;
 
-    function checkAnnouncement() {
-        const saved = localStorage.getItem(ANNOUNCE_KEY);
-        if (!saved || JSON.parse(saved).expire < Date.now()) {
-            showAnnouncement();
-        }
-    }
-
-    function showAnnouncement() {
+    function forceShowAnnouncement() {
+        localStorage.removeItem(ANNOUNCEMENT_KEY);
         document.getElementById('announcementOverlay').style.display = 'flex';
         document.body.style.overflow = 'hidden';
     }
 
+    function shouldShowAnnouncement() {
+        const saved = localStorage.getItem(ANNOUNCEMENT_KEY);
+        if (!saved) return true;
+        return Date.now() > JSON.parse(saved).expire;
+    }
+
     function closeAnnouncement() {
         const dontShow = document.getElementById('dontShowAgain').checked;
-        if (dontShow) {
-            localStorage.setItem(ANNOUNCE_KEY, JSON.stringify({
-                expire: Date.now() + (EXPIRE_DAYS * 86400000)
-            }));
+        if(dontShow) {
+            localStorage.setItem(ANNOUNCEMENT_KEY, 
+                JSON.stringify({ 
+                    expire: Date.now() + (EXPIRATION_DAYS * 86400000) 
+                }));
         }
         document.getElementById('announcementOverlay').style.display = 'none';
         document.body.style.overflow = 'auto';
-    }
-
-    function forceShowAnnouncement() {
-        localStorage.removeItem(ANNOUNCE_KEY);
-        showAnnouncement();
     }
 
     // 通知横幅
@@ -294,18 +296,9 @@
         document.getElementById('notificationBanner').style.display = 'none';
     }
 
-    // 播放器初始化
-    const player = new Plyr('#player', {
-        controls: ['play-large', 'play', 'progress', 'current-time', 'mute', 'volume', 'settings', 'fullscreen'],
-        settings: ['quality', 'speed'],
-        ratio: '16:9'
-    });
-
-    // 交互增强
-    document.querySelectorAll('.btn').forEach(btn => {
-        btn.addEventListener('mousedown', () => btn.style.transform = 'scale(0.95)');
-        btn.addEventListener('mouseup', () => btn.style.transform = '');
-        btn.addEventListener('mouseleave', () => btn.style.transform = '');
+    // 防止遮罩层点击穿透
+    document.getElementById('announcementOverlay').addEventListener('click', (e) => {
+        if (e.target === e.currentTarget) closeAnnouncement();
     });
     </script>
 </body>
