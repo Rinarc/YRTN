@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html lang="zh_hans">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>YRTN SHORT</title>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@picocss/pico@1/css/pico.min.css" />
+  <style>
+    body {
+      background: #000;
+      color: #fff;
+    }
+    .video-card {
+      background-color: #111;
+      border-radius: 10px;
+      padding: 1rem;
+      margin-bottom: 2rem;
+    }
+    .video-user {
+      display: flex;
+      align-items: center;
+      gap: 0.8rem;
+      margin-bottom: 0.5rem;
+    }
+    .video-user img {
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      object-fit: cover;
+    }
+    video {
+      width: 100%;
+      height: auto;
+      border-radius: 8px;
+      margin-top: 1rem;
+    }
+    .like-button {
+      margin-top: 0.5rem;
+      background: #e91e63;
+      color: white;
+      border: none;
+    }
+    a.username {
+      color: #4ea9ff;
+      cursor: pointer;
+    }
+  </style>
+</head>
+<body>
+
+  <nav class="container-fluid">
+    <ul><li><strong>YRTN SHORT</strong></li></ul>
+    <ul>
+      <li><a href="#" onclick="showAll()">首页</a></li>
+      <li><a href="#">探索</a></li>
+      <li><a href="#" role="button">上传</a></li>
+    </ul>
+  </nav>
+
+  <main class="container">
+    <div class="grid" id="videoContainer">
+      <p>加载视频...</p>
+    </div>
+  </main>
+
+  <section aria-label="Subscribe example">
+    <div class="container">
+      <article>
+        <hgroup>
+          <h2>关注最新更新！</h2>
+          <h3>我们将发送最新的视频消息到你的邮箱！</h3>
+        </hgroup>
+        <form class="grid">
+          <input type="text" id="firstname" name="firstname" placeholder="昵称" aria-label="Your name" required />
+          <input type="email" id="email" name="email" placeholder="邮箱" aria-label="Your email" required />
+          <button type="submit" onclick="event.preventDefault()">关注</button>
+        </form>
+      </article>
+    </div>
+  </section>
+
+  <footer class="container">
+    <small><a href="#">Privacy Policy</a> • <a href="#">Terms</a></small>
+  </footer>
+
+  <script>
+    let allVideos = [];
+
+    function renderVideos(filterUsername = null) {
+      const container = document.getElementById("videoContainer");
+      container.innerHTML = "";
+
+      const filtered = filterUsername
+        ? allVideos.filter(v => v.username === filterUsername)
+        : allVideos;
+
+      if (filtered.length === 0) {
+        container.innerHTML = "<p>没有找到相关视频</p>";
+        return;
+      }
+
+      if (filterUsername) {
+        const title = document.createElement("h3");
+        title.innerText = `@${filterUsername}'s Videos`;
+        container.appendChild(title);
+      }
+
+      filtered.forEach(video => {
+        const section = document.createElement("section");
+        section.className = "video-card";
+        section.innerHTML = `
+          <div class="video-user">
+            <img src="${video.avatar}" alt="User Avatar" />
+            <div><strong><a class="username" onclick="gotoUser('${video.username}')">@${video.username}</a></strong></div>
+          </div>
+          <p>${video.description}</p>
+          <video controls autoplay loop muted>
+            <source src="${video.src}" type="video/mp4" />
+            你的浏览器不支持该视频类型
+          </video>
+          <button class="like-button">♥ 喜欢</button>
+        `;
+        container.appendChild(section);
+      });
+    }
+
+    function gotoUser(username) {
+      window.location.hash = `#user-${username}`;
+    }
+
+    function showAll() {
+      window.location.hash = "";
+    }
+
+    function route() {
+      const hash = window.location.hash;
+      if (hash.startsWith("#user-")) {
+        const username = hash.replace("#user-", "");
+        renderVideos(username);
+      } else {
+        renderVideos();
+      }
+    }
+
+    async function loadVideos() {
+      try {
+        const res = await fetch("sv.json");
+        allVideos = await res.json();
+        route();
+      } catch (err) {
+        document.getElementById("videoContainer").innerHTML = "<p>Failed to load videos.</p>";
+      }
+    }
+
+    window.addEventListener("load", loadVideos);
+    window.addEventListener("hashchange", route);
+  </script>
+</body>
+</html>
