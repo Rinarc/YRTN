@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>YRTN SHORT</title>
+  <title>TikTok Clone</title>
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@picocss/pico@1/css/pico.min.css" />
   <style>
     body {
@@ -45,11 +45,12 @@
       cursor: pointer;
     }
   </style>
+  <script src="sv.js"></script>
 </head>
 <body>
 
   <nav class="container-fluid">
-    <ul><li><strong>YRTN SHORT</strong></li></ul>
+    <ul><li><strong>TikTok Clone</strong></li></ul>
     <ul>
       <li><a href="#" onclick="showAll()">首页</a></li>
       <li><a href="#">探索</a></li>
@@ -123,7 +124,6 @@
     }
 
     function convertYouTube(url) {
-      // 兼容 youtu.be 和 youtube.com/watch?v=
       const ytMatch = url.match(/(?:youtube\\.com\\/watch\\?v=|youtu\\.be\\/)([a-zA-Z0-9_-]+)/);
       return ytMatch ? `https://www.youtube.com/embed/${ytMatch[1]}` : url;
     }
@@ -146,14 +146,9 @@
       }
     }
 
-    async function loadVideos() {
-      try {
-        const res = await fetch("sv.json");
-        allVideos = await res.json();
-        route();
-      } catch (err) {
-        document.getElementById("videoContainer").innerHTML = "<p>无法加载视频</p>";
-      }
+    function loadVideos() {
+      allVideos = videos;
+      route();
     }
 
     window.addEventListener("load", loadVideos);
