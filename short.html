@@ -1,9 +1,9 @@
 <!DOCTYPE html>
-<html lang="zh_hans">
+<html lang="zh">
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>YRTN SHORT</title>
+  <title>TikTok Clone</title>
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@picocss/pico@1/css/pico.min.css" />
   <style>
     body {
@@ -28,9 +28,9 @@
       border-radius: 50%;
       object-fit: cover;
     }
-    video {
+    video, iframe {
       width: 100%;
-      height: auto;
+      height: 400px;
       border-radius: 8px;
       margin-top: 1rem;
     }
@@ -59,28 +59,12 @@
 
   <main class="container">
     <div class="grid" id="videoContainer">
-      <p>加载视频...</p>
+      <p>加载中...</p>
     </div>
   </main>
 
-  <section aria-label="Subscribe example">
-    <div class="container">
-      <article>
-        <hgroup>
-          <h2>关注最新更新！</h2>
-          <h3>我们将发送最新的视频消息到你的邮箱！</h3>
-        </hgroup>
-        <form class="grid">
-          <input type="text" id="firstname" name="firstname" placeholder="昵称" aria-label="Your name" required />
-          <input type="email" id="email" name="email" placeholder="邮箱" aria-label="Your email" required />
-          <button type="submit" onclick="event.preventDefault()">关注</button>
-        </form>
-      </article>
-    </div>
-  </section>
-
   <footer class="container">
-    <small><a href="#">Privacy Policy</a> • <a href="#">Terms</a></small>
+    <small><a href="#">隐私政策</a> • <a href="#">服务条款</a></small>
   </footer>
 
   <script>
@@ -95,37 +79,57 @@
         : allVideos;
 
       if (filtered.length === 0) {
-        container.innerHTML = "<p>没有找到相关视频</p>";
+        container.innerHTML = "<p>未找到视频</p>";
         return;
       }
 
       if (filterUsername) {
         const title = document.createElement("h3");
-        title.innerText = `@${filterUsername}'s Videos`;
+        title.innerText = `@${filterUsername} 的视频`;
         container.appendChild(title);
       }
 
       filtered.forEach(video => {
         const section = document.createElement("section");
         section.className = "video-card";
+
+        const isMP4 = video.src.endsWith(".mp4");
+        const isYouTube = video.src.includes("youtube.com") || video.src.includes("youtu.be");
+        const isBilibili = video.src.includes("bilibili.com");
+
+        let playerHTML = "";
+        if (isMP4) {
+          playerHTML = `<video controls autoplay loop muted><source src="${video.src}" type="video/mp4" /></video>`;
+        } else if (isYouTube) {
+          const ytId = video.src.includes("embed") ? video.src : convertYouTube(video.src);
+          playerHTML = `<iframe src="${ytId}" frameborder="0" allowfullscreen></iframe>`;
+        } else if (isBilibili) {
+          playerHTML = `<iframe src="${video.src}" frameborder="0" allowfullscreen></iframe>`;
+        } else {
+          playerHTML = `<p>不支持的视频来源</p>`;
+        }
+
         section.innerHTML = `
           <div class="video-user">
-            <img src="${video.avatar}" alt="User Avatar" />
+            <img src="${video.avatar}" alt="用户头像" />
             <div><strong><a class="username" onclick="gotoUser('${video.username}')">@${video.username}</a></strong></div>
           </div>
           <p>${video.description}</p>
-          <video controls autoplay loop muted>
-            <source src="${video.src}" type="video/mp4" />
-            你的浏览器不支持该视频类型
-          </video>
+          ${playerHTML}
           <button class="like-button">♥ 喜欢</button>
         `;
         container.appendChild(section);
       });
     }
 
+    function convertYouTube(url) {
+      // 兼容 youtu.be 和 youtube.com/watch?v=
+      const ytMatch = url.match(/(?:youtube\\.com\\/watch\\?v=|youtu\\.be\\/)([a-zA-Z0-9_-]+)/);
+      return ytMatch ? `https://www.youtube.com/embed/${ytMatch[1]}` : url;
+    }
+
     function gotoUser(username) {
-      window.location.hash = `#user-${username}`;
+      window.location.hash = `#user-${encodeURIComponent(username)}`;
     }
 
     function showAll() {
@@ -135,7 +139,7 @@
     function route() {
       const hash = window.location.hash;
       if (hash.startsWith("#user-")) {
-        const username = hash.replace("#user-", "");
+        const username = decodeURIComponent(hash.replace("#user-", ""));
         renderVideos(username);
       } else {
         renderVideos();
@@ -148,7 +152,7 @@
         allVideos = await res.json();
         route();
       } catch (err) {
-        document.getElementById("videoContainer").innerHTML = "<p>Failed to load videos.</p>";
+        document.getElementById("videoContainer").innerHTML = "<p>无法加载视频</p>";
       }
     }
 
