@@ -3,12 +3,19 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>YRTN SHORT</title>
+  <title>TikTok Clone</title>
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@picocss/pico@1/css/pico.min.css" />
   <style>
     body {
       background: #000;
       color: #fff;
+    }
+    /* 新增网格布局 */
+    .video-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+      gap: 2rem;
+      padding: 1rem;
     }
     .video-card {
       background-color: #111;
@@ -33,6 +40,7 @@
       height: 400px;
       border-radius: 8px;
       margin-top: 1rem;
+      background: #000; /* 添加背景色避免空白 */
     }
     .like-button {
       margin-top: 0.5rem;
@@ -43,6 +51,11 @@
     a.username {
       color: #4ea9ff;
       cursor: pointer;
+      text-decoration: none; /* 移除下划线 */
+    }
+    /* 移除Pico CSS对button的阴影 */
+    button {
+      box-shadow: none !important;
     }
   </style>
 </head>
@@ -58,7 +71,7 @@
   </nav>
 
   <main class="container">
-    <div class="grid" id="videoContainer">
+    <div class="video-grid" id="videoContainer"> <!-- 修改为video-grid -->
       <p>加载中...</p>
     </div>
   </main>
@@ -99,7 +112,7 @@
 
     function renderVideos(filterUsername = null) {
       const container = document.getElementById("videoContainer");
-      container.innerHTML = "";
+      container.innerHTML = ""; // 清空加载提示
 
       const filtered = filterUsername
         ? allVideos.filter(v => v.username === filterUsername)
@@ -120,18 +133,30 @@
         const section = document.createElement("section");
         section.className = "video-card";
 
-        const isMP4 = video.src.endsWith(".mp4");
-        const isYouTube = video.src.includes("youtube.com") || video.src.includes("youtu.be");
-        const isBilibili = video.src.includes("bilibili.com");
+        // 改进视频类型检测
+        const url = new URL(video.src);
+        const isMP4 = url.pathname.endsWith(".mp4");
+        const isMOV = url.pathname.endsWith(".mov");
+        const isBilibili = url.hostname.includes("bilibili");
+        const isVimeo = url.hostname.includes("vimeo");
 
         let playerHTML = "";
-        if (isMP4) {
-          playerHTML = `<video controls autoplay loop muted><source src="${video.src}" type="video/mp4" /></video>`;
-        } else if (isYouTube) {
-          const ytId = video.src.includes("embed") ? video.src : convertYouTube(video.src);
-          playerHTML = `<iframe src="${ytId}" frameborder="0" allowfullscreen></iframe>`;
+        if (isMP4 || isMOV) {
+          playerHTML = `
+            <video controls autoplay loop muted playsinline>
+              <source src="${video.src}" type="${isMP4 ? 'video/mp4' : 'video/quicktime'}">
+              您的浏览器不支持视频播放
+            </video>`;
         } else if (isBilibili) {
-          playerHTML = `<iframe src="${video.src}" frameborder="0" allowfullscreen></iframe>`;
+          playerHTML = `<iframe src="${video.src}" allow="autoplay; fullscreen" frameborder="0" allowfullscreen></iframe>`;
+        } else if (isVimeo) {
+          // 处理Vimeo嵌入链接
+          const match = video.src.match(/\/external\/(\d+)/);
+          if (match) {
+            playerHTML = `<iframe src="https://player.vimeo.com/video/${match[1]}" frameborder="0" allow="autoplay; fullscreen" allowfullscreen></iframe>`;
+          } else {
+            playerHTML = `<p>不支持的Vimeo链接格式</p>`;
+          }
         } else {
           playerHTML = `<p>不支持的视频来源</p>`;
         }
@@ -147,11 +172,6 @@
         `;
         container.appendChild(section);
       });
-    }
-
-    function convertYouTube(url) {
-      const ytMatch = url.match(/(?:youtube\\.com\\/watch\\?v=|youtu\\.be\\/)([a-zA-Z0-9_-]+)/);
-      return ytMatch ? `https://www.youtube.com/embed/${ytMatch[1]}` : url;
     }
 
     function gotoUser(username) {
@@ -173,7 +193,7 @@
     }
 
     function loadVideos() {
-      allVideos = videos;
+      allVideos = [...videos];
       route();
     }
 
