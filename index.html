@@ -1,305 +1,241 @@
 <!DOCTYPE html>
 <html lang="zh-CN">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="description" content="YRTN">
-    <title>渊迂视界 | 看见未来</title>
-    <link rel="stylesheet" href="https://cdn.plyr.io/3.7.8/plyr.css">
-    <link rel="stylesheet" href="main.css">
-    
-    <style>
-    /* ======= 文字启动动画 ======= */
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>渊迂视界 | 看见未来</title>
+  <link rel="stylesheet" href="https://cdn.plyr.io/3.7.8/plyr.css">
+  <style>
+    :root {
+      --bbc-black: #1A1A1A;
+      --bbc-red: #BB1919;
+      --white: #ffffff;
+    }
+
+    body {
+      margin: 0;
+      background-color: var(--bbc-black);
+      color: var(--white);
+      font-family: Arial, sans-serif;
+    }
+
     .splash-screen {
-        position: fixed;
-        top: 0;
-        left: 0;
-        width: 100%;
-        height: 100%;
-        background: linear-gradient(135deg, #6366f1 0%, #8b5cf6 100%);
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        z-index: 9999;
-        opacity: 1;
-        transition: opacity 0.5s ease-out;
+      position: fixed;
+      top: 0; left: 0;
+      width: 100%; height: 100%;
+      background: var(--bbc-red);
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      z-index: 9999;
+      opacity: 1;
+      transition: opacity 0.5s ease-out;
     }
 
     .splash-logo {
-        font-size: 3em;
-        font-weight: bold;
-        animation: splashAnim 1.5s ease-in-out forwards;
-        color: white;
-        text-shadow: 2px 2px 4px rgba(0,0,0,0.2);
-        font-family: 'Arial', sans-serif;
+      font-size: 3em;
+      font-weight: bold;
+      animation: splashAnim 1.5s ease-in-out forwards;
+      color: var(--white);
+      text-shadow: 2px 2px 8px rgba(0, 0, 0, 0.6);
     }
 
     @keyframes splashAnim {
-        0% { opacity: 0; transform: scale(0.8) rotate(-10deg); }
-        30% { opacity: 1; transform: scale(1.1) rotate(5deg); }
-        60% { transform: scale(0.95) rotate(-2deg); }
-        100% { opacity: 0; transform: scale(1.5) rotate(0deg); }
+      0% { opacity: 0; transform: scale(0.8); }
+      30% { opacity: 1; transform: scale(1.1); }
+      60% { transform: scale(0.95); }
+      100% { opacity: 0; transform: scale(1.5); }
     }
 
-    /* ======= 原有公告样式 ======= */
-    .overlay {
-        position: fixed;
-        top: 0;
-        left: 0;
-        width: 100%;
-        height: 100%;
-        background: rgba(0,0,0,0.6);
-        display: none;
-        justify-content: center;
-        align-items: center;
-        z-index: 1000;
-        backdrop-filter: blur(3px);
-    }
-
-    .announcement-modal {
-        background: white;
-        padding: 2rem;
-        border-radius: 12px;
-        width: 90%;
-        max-width: 500px;
-        position: relative;
-        animation: modalSlideIn 0.3s ease-out;
-    }
-
-    @keyframes modalSlideIn {
-        from { transform: translateY(-50px); opacity: 0; }
-        to { transform: translateY(0); opacity: 1; }
-    }
-
-    .close-btn {
-        position: absolute;
-        top: 1rem;
-        right: 1rem;
-        background: none;
-        border: none;
-        font-size: 1.5rem;
-        cursor: pointer;
-        color: #666;
-    }
-
-    .content {
-        margin: 1rem 0;
-        line-height: 1.6;
-    }
-
-    .preference {
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-        margin-top: 1.5rem;
-        padding-top: 1rem;
-        border-top: 1px solid #eee;
-    }
-
-    .confirm-btn {
-        background: #2196F3;
-        color: white;
-        padding: 8px 20px;
-        border: none;
-        border-radius: 6px;
-        cursor: pointer;
-        transition: background 0.3s;
-    }
-
-    .confirm-btn:hover {
-        background: #1976D2;
-    }
-
-    /* ======= 通知横幅 ======= */
     .notification-banner {
-        position: relative;
-        background: #1A1A1A;
-        color: black;
-        padding: 12px 40px;
-        text-align: center;
-        box-shadow: 0 2px 4px rgba(0,0,0,0.1);
-        z-index: 1000;
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
+      background-color: var(--bbc-red);
+      color: var(--white);
+      padding: 1rem;
+      text-align: center;
+      position: relative;
     }
 
-    /* ======= 主站样式 ======= */
+    .notification-close {
+      position: absolute;
+      top: 10px;
+      right: 20px;
+      font-size: 1.5rem;
+      background: none;
+      border: none;
+      color: var(--white);
+      cursor: pointer;
+    }
+
     .main-header {
-        background: linear-gradient(135deg, #6366f1 0%, #8b5cf6 100%);
-        color: white;
-        padding: 1.5rem 0;
-        box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+      background-color: var(--bbc-black);
+      padding: 1.5rem 0;
+      text-align: center;
+      position: relative;
     }
 
     .logo {
-        font-size: 2.2rem;
-        font-weight: 700;
-        text-shadow: 1px 1px 2px rgba(0,0,0,0.1);
+      font-size: 2.5rem;
+      font-weight: bold;
+      color: var(--white);
     }
 
     .icon-button {
-        position: absolute;
-        top: 1.5rem;
-        right: 1.5rem;
-        width: 40px;
-        height: 40px;
-        transition: transform 0.2s ease;
-    }
-
-    .icon-button:hover {
-        transform: scale(1.1);
+      position: absolute;
+      top: 1rem;
+      right: 1rem;
+      width: 40px;
     }
 
     .icon-button img {
-        width: 100%;
-        height: 100%;
-        object-fit: contain;
+      width: 100%;
+    }
+
+    .subtitle {
+      color: var(--bbc-red);
+      font-weight: bold;
+      margin-top: 0.5rem;
+    }
+
+    .main-content {
+      padding: 1rem;
+    }
+
+    .player-container {
+      background-color: #000;
+      border: 2px solid var(--bbc-red);
+      border-radius: 12px;
+      overflow: hidden;
+    }
+
+    .episode-controls {
+      margin: 1rem 0;
+      text-align: center;
+    }
+
+    .btn {
+      background-color: var(--bbc-red);
+      color: var(--white);
+      border: none;
+      padding: 0.6rem 1.2rem;
+      margin: 0 0.5rem;
+      border-radius: 6px;
+      cursor: pointer;
+      font-weight: bold;
+    }
+
+    .btn:hover {
+      background-color: #a01616;
+    }
+
+    .announcement-modal {
+      background: var(--white);
+      color: #333;
+      padding: 2rem;
+      border-radius: 8px;
+      max-width: 500px;
+      margin: auto;
+      position: relative;
+    }
+
+    .overlay {
+      position: fixed;
+      top: 0; left: 0;
+      width: 100%; height: 100%;
+      background: rgba(0,0,0,0.7);
+      display: none;
+      justify-content: center;
+      align-items: center;
+      z-index: 1000;
+    }
+
+    .confirm-btn {
+      background-color: var(--bbc-red);
+      color: var(--white);
+      border: none;
+      padding: 0.5rem 1rem;
+      border-radius: 6px;
+      cursor: pointer;
+    }
+
+    .main-footer {
+      background-color: #111;
+      text-align: center;
+      padding: 1rem;
+      font-size: 0.9rem;
+    }
+
+    a {
+      color: var(--bbc-red);
     }
 
     @media (max-width: 768px) {
-        .logo { font-size: 1.8rem; }
-        .icon-button { width: 36px; height: 36px; }
-        .splash-logo { font-size: 2.5em; }
+      .logo { font-size: 1.8rem; }
     }
-    </style>
+  </style>
 </head>
 
 <body>
-    <!-- 文字启动动画 -->
-    <div class="splash-screen">
-        <div class="splash-logo">YRTN VISION</div>
+  <div class="splash-screen">
+    <div class="splash-logo">YRTN VISION</div>
+  </div>
+
+  <div class="notification-banner" id="notificationBanner">
+    <div class="notification-content">欢迎访问 YRTN VISION</div>
+    <button class="notification-close" onclick="closeNotification()">&times;</button>
+  </div>
+
+  <header class="main-header">
+    <h1 class="logo">渊迂视界线</h1>
+    <a href="short.html" class="icon-button" title="YRTN SHORT">
+      <img src="https://img.picgo.net/2025/05/15/knockout571abe27b2621984.png" alt="YRTN SHORT" />
+    </a>
+    <p class="subtitle">YRTN VISION</p>
+  </header>
+
+  <main class="main-content">
+    <div class="player-container">
+      <video id="player" playsinline controls></video>
     </div>
-
-    <!-- 通知横幅 -->
-    <div class="notification-banner" id="notificationBanner">
-        <div class="notification-content">欢迎访问YRTN VISION ( ´･ᴗ･` )</div>
-        <button class="notification-close" onclick="closeNotification()">&times;</button>
+    <div class="episode-controls">
+      <button class="btn prev" onclick="changeEpisode(-1)">← 上一集</button>
+      <span class="episode-counter" id="episodeCounter">第 1 集</span>
+      <button class="btn next" onclick="changeEpisode(1)">下一集 →</button>
     </div>
+    <div class="series-info" id="seriesInfo">剧集信息加载中...</div>
+    <div class="episode-list" id="episodeList"></div>
+  </main>
 
-    <!-- 头部 -->
-    <header class="main-header">
-        <div class="container">
-            <h1 class="logo">渊迂视界线</h1>
-            <a href="short.html" class="icon-button" title="YRTN SHORT">
-                <img src="https://img.picgo.net/2025/05/15/knockout571abe27b2621984.png" alt="YRTN SHORT" />
-            </a>
-            <a href="#" class="icon-button announcement-btn" title="查看公告" onclick="forceShowAnnouncement()">
-                <img src="https://img.picgo.net/2025/05/16/knockout31c2995b964fae5a.png" alt="查看公告" />
-            </a>
-            <p class="subtitle">YRTN VISION</p>
+  <footer class="main-footer">
+    <p>© 2025 YRTN VISION · 基于 <a href="https://pages.github.com/" target="_blank">GitHub Pages</a></p>
+  </footer>
 
-            <!-- 公告弹窗 -->
-            <div class="overlay" id="announcementOverlay">
-                <div class="announcement-modal">
-                    <button class="close-btn" onclick="closeAnnouncement()">&times;</button>
-                    <h2 style="color: #333;">🎉 重要公告</h2>
-                    <div class="content">
-                        <p style="color: #333;">很高兴为您带来以下新更新：</p>
-                        <ul>
-                            <li style="color: #666;">✔️-短视频功能升级！可自行选择静音与否；提升使用体验！</li>
-                            <li style="color: #666;">✔️-您可以点击右上角图标前往短视频或查看公告</li>
-                            <li style="color: #666;">✔️-修复了一些已知问题，顺便偷偷内卷（）</li>
-                        </ul>
-                    </div>
-                    <div class="preference">
-                        <label style="color: #666;">
-                            <input type="checkbox" id="dontShowAgain"> 七天内不再显示
-                        </label>
-                        <button class="confirm-btn" onclick="closeAnnouncement()">我知道了</button>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </header>
+  <div class="overlay" id="announcementOverlay">
+    <div class="announcement-modal">
+      <button class="confirm-btn" onclick="closeAnnouncement()">我知道了</button>
+      <h2>🎉 重要公告</h2>
+      <p>短视频功能升级，提升体验，欢迎体验！</p>
+    </div>
+  </div>
 
-    <!-- 主内容 -->
-    <main class="container layout-grid">
-        <aside class="series-list" id="seriesList"></aside>
-        <section class="main-content">
-            <div class="player-container">
-                <video id="player" playsinline controls></video>
-            </div>
-            <div class="episode-controls">
-                <button class="btn prev" onclick="changeEpisode(-1)">← 上一集</button>
-                <span class="episode-counter" id="episodeCounter"></span>
-                <button class="btn next" onclick="changeEpisode(1)">下一集 →</button>
-            </div>
-            <div class="series-info" id="seriesInfo"></div>
-            <div class="episode-list" id="episodeList"></div>
-        </section>
-    </main>
-
-    <!-- 页脚 -->
-    <footer class="main-footer">
-        <div class="container">
-            <p>© 2025 YRTN VISION · 基于 <a href="https://pages.github.com/" target="_blank">GitHub Pages</a></p>
-        </div>
-    </footer>
-
-    <!-- 脚本 -->
-    <script src="https://cdn.plyr.io/3.7.8/plyr.js"></script>
-    <script src="main.js"></script>
-
-    <script>
+  <script src="https://cdn.plyr.io/3.7.8/plyr.js"></script>
+  <script src="main.js"></script>
+  <script>
     // 启动动画控制
     window.addEventListener('load', () => {
-        const splashScreen = document.querySelector('.splash-screen');
-        
-        // 动画持续1.5秒
-        setTimeout(() => {
-            splashScreen.classList.add('hide');
-            
-            // 完全移除元素
-            setTimeout(() => {
-                splashScreen.remove();
-                
-                // 显示公告（原逻辑）
-                if(shouldShowAnnouncement()) {
-                    document.getElementById('announcementOverlay').style.display = 'flex';
-                    document.body.style.overflow = 'hidden';
-                }
-            }, 500);
-        }, 1500);
+      const splash = document.querySelector('.splash-screen');
+      setTimeout(() => {
+        splash.style.opacity = '0';
+        setTimeout(() => splash.remove(), 500);
+      }, 1500);
     });
 
-    // 公告系统
-    const ANNOUNCEMENT_KEY = 'hideAnnouncement';
-    const EXPIRATION_DAYS = 7;
-
-    function forceShowAnnouncement() {
-        localStorage.removeItem(ANNOUNCEMENT_KEY);
-        document.getElementById('announcementOverlay').style.display = 'flex';
-        document.body.style.overflow = 'hidden';
-    }
-
-    function shouldShowAnnouncement() {
-        const saved = localStorage.getItem(ANNOUNCEMENT_KEY);
-        if (!saved) return true;
-        return Date.now() > JSON.parse(saved).expire;
+    function closeNotification() {
+      document.getElementById('notificationBanner').style.display = 'none';
     }
 
     function closeAnnouncement() {
-        const dontShow = document.getElementById('dontShowAgain').checked;
-        if(dontShow) {
-            localStorage.setItem(ANNOUNCEMENT_KEY, 
-                JSON.stringify({ 
-                    expire: Date.now() + (EXPIRATION_DAYS * 86400000) 
-                }));
-        }
-        document.getElementById('announcementOverlay').style.display = 'none';
-        document.body.style.overflow = 'auto';
+      document.getElementById('announcementOverlay').style.display = 'none';
     }
-
-    // 通知横幅
-    function closeNotification() {
-        document.getElementById('notificationBanner').style.display = 'none';
-    }
-
-    // 防止遮罩层点击穿透
-    document.getElementById('announcementOverlay').addEventListener('click', (e) => {
-        if (e.target === e.currentTarget) closeAnnouncement();
-    });
-    </script>
+  </script>
 </body>
 </html>
