@@ -3,8 +3,9 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="YRTN">
   <title>渊迂视界 | 看见未来</title>
-  <link rel="stylesheet" href="https://cdn.plyr.io/3.7.8/plyr.css">
+  <link rel="stylesheet" href="https://cdn.plyr.io/3.7.8/plyr.css" />
   <style>
     :root {
       --bbc-black: #1A1A1A;
@@ -82,7 +83,7 @@
     .icon-button {
       position: absolute;
       top: 1rem;
-      right: 1rem;
+      right: 4rem;
       width: 40px;
     }
 
@@ -175,15 +176,18 @@
 </head>
 
 <body>
+  <!-- 启动动画 -->
   <div class="splash-screen">
     <div class="splash-logo">YRTN VISION</div>
   </div>
 
+  <!-- 通知横幅 -->
   <div class="notification-banner" id="notificationBanner">
     <div class="notification-content">欢迎访问 YRTN VISION</div>
     <button class="notification-close" onclick="closeNotification()">&times;</button>
   </div>
 
+  <!-- 顶部区域 -->
   <header class="main-header">
     <h1 class="logo">渊迂视界线</h1>
     <a href="short.html" class="icon-button" title="YRTN SHORT">
@@ -192,6 +196,7 @@
     <p class="subtitle">YRTN VISION</p>
   </header>
 
+  <!-- 主内容区域 -->
   <main class="main-content">
     <div class="player-container">
       <video id="player" playsinline controls></video>
@@ -205,36 +210,68 @@
     <div class="episode-list" id="episodeList"></div>
   </main>
 
+  <!-- 页脚 -->
   <footer class="main-footer">
     <p>© 2025 YRTN VISION · 基于 <a href="https://pages.github.com/" target="_blank">GitHub Pages</a></p>
   </footer>
 
+  <!-- 公告弹窗 -->
   <div class="overlay" id="announcementOverlay">
     <div class="announcement-modal">
-      <button class="confirm-btn" onclick="closeAnnouncement()">我知道了</button>
       <h2>🎉 重要公告</h2>
-      <p>短视频功能升级，提升体验，欢迎体验！</p>
+      <p>短视频功能升级，欢迎体验！</p>
+      <label><input type="checkbox" id="dontShowAgain"> 七天内不再显示</label>
+      <br /><br />
+      <button class="confirm-btn" onclick="closeAnnouncement()">我知道了</button>
     </div>
   </div>
 
+  <!-- 脚本 -->
   <script src="https://cdn.plyr.io/3.7.8/plyr.js"></script>
   <script src="main.js"></script>
   <script>
-    // 启动动画控制
+    // 启动动画
     window.addEventListener('load', () => {
       const splash = document.querySelector('.splash-screen');
       setTimeout(() => {
         splash.style.opacity = '0';
         setTimeout(() => splash.remove(), 500);
       }, 1500);
+
+      if (shouldShowAnnouncement()) {
+        document.getElementById('announcementOverlay').style.display = 'flex';
+        document.body.style.overflow = 'hidden';
+      }
     });
+
+    // 公告逻辑
+    const ANNOUNCEMENT_KEY = 'hideAnnouncement';
+    const EXPIRATION_DAYS = 7;
+
+    function shouldShowAnnouncement() {
+      const saved = localStorage.getItem(ANNOUNCEMENT_KEY);
+      if (!saved) return true;
+      return Date.now() > JSON.parse(saved).expire;
+    }
+
+    function closeAnnouncement() {
+      const dontShow = document.getElementById('dontShowAgain').checked;
+      if (dontShow) {
+        localStorage.setItem(ANNOUNCEMENT_KEY, JSON.stringify({
+          expire: Date.now() + (EXPIRATION_DAYS * 86400000)
+        }));
+      }
+      document.getElementById('announcementOverlay').style.display = 'none';
+      document.body.style.overflow = 'auto';
+    }
 
     function closeNotification() {
       document.getElementById('notificationBanner').style.display = 'none';
     }
 
-    function closeAnnouncement() {
-      document.getElementById('announcementOverlay').style.display = 'none';
+    function changeEpisode(n) {
+      // 示例占位函数，需由 main.js 实现具体逻辑
+      alert("切换 " + (n > 0 ? "下一集" : "上一集"));
     }
   </script>
 </body>
